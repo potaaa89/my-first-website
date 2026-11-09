@@ -1,93 +1,89 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1020">
-<title>AnonChat — видеочат</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f4f6fb">
+<title>AnonChat — знакомства и видеочат</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1020;--panel:#121a2d;--line:#26344f;--text:#f4f7ff;--muted:#9ba9c3;--blue:#638cff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0%,#1b2d55 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,Segoe UI,Arial,sans-serif;min-height:100vh}
-.wrap{max-width:1180px;margin:auto;padding:22px}.top{display:flex;align-items:center;justify-content:space-between;padding:8px 0 22px}.brand{font-size:21px;font-weight:800;display:flex;gap:10px;align-items:center}.mark{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#77a0ff,#7458e8);display:grid;place-items:center}.online{color:#83e6bd;font-size:13px}.hero{padding:18px 0 22px}.eyebrow{color:#8eabff;font-weight:700;letter-spacing:1.7px;text-transform:uppercase;font-size:11px}h1{font-size:clamp(34px,6vw,54px);line-height:1.05;letter-spacing:-1.7px;margin:11px 0}.hero p{color:var(--muted);font-size:16px;margin:0}.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,.7fr);gap:17px}.panel{background:linear-gradient(160deg,#151f35,#10182a);border:1px solid var(--line);border-radius:19px;overflow:hidden;box-shadow:0 18px 55px #0003}.panelhead{padding:16px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.tag{font-size:12px;color:#a9b9d6;background:#202d47;padding:6px 10px;border-radius:20px}.pad{padding:18px}.fieldlabel{display:block;color:#b5c2d9;font-size:13px;margin:0 0 7px}.input{width:100%;border:1px solid #34435f;background:#0d1526;color:var(--text);padding:12px 13px;border-radius:11px;font:inherit;outline:none}.input:focus{border-color:#7597ff}.btn{border:0;border-radius:11px;padding:12px 16px;font:700 14px Arial,sans-serif;cursor:pointer;transition:.2s}.btn:disabled{opacity:.42;cursor:not-allowed}.primary{background:linear-gradient(110deg,#648eff,#765fe8);color:white}.secondary{background:#202d47;color:#dce6ff}.danger{background:#4a2636;color:#ffc4d2}.actions{display:flex;gap:9px;margin-top:13px;flex-wrap:wrap}.actions .btn{flex:1}.videos{position:relative;display:block;margin-top:17px;aspect-ratio:16/9;min-height:260px;background:#070c17;border:1px solid var(--line);border-radius:14px;overflow:hidden}.videoCard{position:absolute;inset:0;background:#070c17;border:0;border-radius:0;overflow:hidden;aspect-ratio:auto;min-height:0;width:100%;height:100%}.videoCard:nth-child(2){z-index:1}.videoCard:first-child{z-index:2;inset:14px auto auto 14px;width:clamp(112px,24%,220px);height:auto;aspect-ratio:16/10;border:2px solid #829fff;border-radius:12px;box-shadow:0 8px 28px #0009}.videoCard video{width:100%;height:100%;object-fit:cover;display:block}.videoLabel{position:absolute;left:10px;bottom:9px;background:#07101dcc;padding:5px 9px;border-radius:8px;font-size:12px}.videoPlaceholder{position:absolute;inset:0;display:grid;place-items:center;color:#7d8eae;font-size:13px;text-align:center;padding:14px}.chatbox{margin-top:16px;border:1px solid var(--line);border-radius:14px;background:#0c1424;display:flex;flex-direction:column}.chatstatus{padding:10px 13px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}.messages{padding:13px;display:flex;flex-direction:column;gap:8px;min-height:110px;max-height:220px;overflow:auto}.bubble{max-width:82%;padding:9px 12px;border-radius:13px;background:#202d47;color:#e8eeff;align-self:flex-start;overflow-wrap:anywhere;white-space:pre-wrap}.bubble.me{background:#3156a6;align-self:flex-end}.empty{color:#7787a4;text-align:center;margin:auto;padding:14px;font-size:13px}.sendrow{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}.sendrow .input{min-width:0}.side{padding:19px}.side h2{font-size:16px;margin:0 0 13px}.feature{display:flex;gap:11px;margin:16px 0;color:var(--muted);font-size:13px}.ico{width:34px;height:34px;flex:none;border-radius:10px;background:#202d47;display:grid;place-items:center}.notice{margin-top:16px;border:1px solid #69552c;background:#352b18;color:#f2d69a;padding:12px;border-radius:12px;font-size:12px}.standalone-chat{margin-top:17px}.standalone-chat .chatbox{margin-top:0}.standalone-chat .messages{min-height:150px;max-height:300px}.footer{padding:24px 0 5px;text-align:center;color:#73819b;font-size:12px}
-@media(max-width:800px){.wrap{padding:15px}.layout{grid-template-columns:1fr}.videos{min-height:220px}}@media(max-width:480px){.videos{min-height:210px}.videoCard:first-child{width:34%;inset:9px auto auto 9px}.actions{flex-direction:column}.sendrow{flex-wrap:wrap}.sendrow .input{width:100%}}
-
-/* Mobile app-like full-screen layout */
-@media(max-width:600px){
- html,body{width:100%;min-height:100%;margin:0}
- body{min-height:100dvh}
- .wrap{width:100%;max-width:none;margin:0;padding:0 0 env(safe-area-inset-bottom)}
- .top{padding:10px 14px 12px;margin:0}
- .hero{padding:8px 14px 14px}
- .hero h1{font-size:30px;letter-spacing:-.8px;margin:7px 0}
- .hero p{font-size:13px;line-height:1.35}
- .layout{display:block;margin:0}
- .layout>.panel:first-child{border-radius:0;border-left:0;border-right:0}
- .panelhead{padding:12px 14px}
- .pad{padding:12px}
- .fieldlabel{font-size:12px}
- .input{padding:11px 12px}
- .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
- .actions .btn{min-height:44px;padding:10px}
- .videos{width:100%;height:calc(100svh - 360px);min-height:260px;max-height:560px;aspect-ratio:auto;margin-top:12px;border-radius:12px}
- .videoCard:first-child{width:31%;max-width:150px;min-width:100px;inset:10px auto auto 10px}
- .videoLabel{font-size:11px;left:7px;bottom:7px}
- .chatbox{margin-top:12px;border-radius:12px}
- .messages{min-height:100px;max-height:24svh}
- .sendrow{flex-wrap:nowrap}
- .sendrow .input{width:auto;flex:1}
- .sendrow .btn{min-width:94px}
- .side{display:none}
- .standalone-chat{margin:12px 10px 0;border-radius:14px;border:1px solid var(--line)}
- .standalone-chat .pad{padding:10px}
- .standalone-chat .messages{min-height:120px;max-height:32svh}
- .standalone-chat .sendrow{flex-wrap:nowrap}
- .standalone-chat .sendrow .input{width:auto;flex:1}
- .footer{padding:18px 12px;font-size:11px}
-}
-@media(max-width:380px){
- .hero h1{font-size:26px}
- .videos{height:calc(100svh - 340px)}
- .actions .btn{font-size:12px}
-}
-
+:root{color-scheme:light;--bg:#f3f5fa;--paper:#fff;--line:#e7eaf1;--ink:#20283a;--muted:#8992a5;--blue:#4778e8;--blue2:#315fc9;--soft:#edf3ff;--green:#20a879;--red:#e45c6c}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font:14px/1.45 Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+button,input,select{font:inherit}.app{min-height:100vh;display:grid;grid-template-rows:68px 1fr}.topbar{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 26px;gap:28px;position:sticky;top:0;z-index:10}.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:20px;letter-spacing:-.5px;min-width:230px}.mark{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#5591ff,#4265d8);color:white;display:grid;place-items:center;font-size:20px;box-shadow:0 5px 14px #4778e833}.topnav{display:flex;align-items:center;gap:8px;flex:1}.navitem{border:0;background:transparent;color:#6d778b;padding:10px 13px;border-radius:10px;font-weight:650;cursor:pointer}.navitem.active,.navitem:hover{background:var(--soft);color:var(--blue)}.topright{display:flex;align-items:center;gap:12px}.online{display:flex;align-items:center;gap:7px;color:#748096;font-size:12px}.dot{width:8px;height:8px;background:#25b783;border-radius:50%;display:inline-block}.avatar{width:35px;height:35px;border-radius:50%;background:#e8efff;color:#416ed5;display:grid;place-items:center;font-weight:800}
+.workspace{max-width:1600px;width:100%;margin:0 auto;padding:22px;display:grid;grid-template-columns:280px minmax(420px,1fr) 330px;gap:18px;align-items:start}.column{min-width:0}.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:0 4px 18px #29385c08;overflow:hidden}.cardhead{display:flex;align-items:center;justify-content:space-between;padding:15px 17px;border-bottom:1px solid var(--line);font-weight:750}.muted{color:var(--muted)}.small{font-size:12px}.pad{padding:16px}.sectiontitle{font-size:13px;font-weight:800;margin:0 0 12px}.profilebox{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--line)}.profilepic{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#dce8ff,#edf2ff);display:grid;place-items:center;font-size:22px;color:#4778e8}.profilemeta{min-width:0}.profilemeta b{display:block;font-size:14px}.profilemeta span{font-size:12px;color:var(--muted)}.tag{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:30px;background:#f1f4f9;color:#718096;font-size:11px;font-weight:700}.fieldlabel{display:block;color:#778196;font-size:11px;font-weight:700;margin:0 0 5px}.input{width:100%;border:1px solid #e2e6ee;background:#fff;color:var(--ink);padding:10px 11px;border-radius:9px;outline:none;min-width:0}.input:focus{border-color:#8eafff;box-shadow:0 0 0 3px #4778e814}.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fieldwide{grid-column:1/-1}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:750;cursor:pointer;transition:.15s;white-space:nowrap}.btn:disabled{opacity:.42;cursor:not-allowed}.primary{background:var(--blue);color:white;box-shadow:0 4px 10px #4778e829}.primary:hover{background:var(--blue2)}.secondary{background:#f0f3f8;color:#526078}.secondary:hover{background:#e8edf5}.danger{background:#fff0f1;color:#d64f60}.outline{background:white;border:1px solid #dfe5ef;color:#64718a}.full{width:100%}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions .btn{flex:1}.divider{height:1px;background:var(--line);margin:15px 0}.authmessage{font-size:11px;color:#8490a4;margin-top:9px;line-height:1.4}.filterheading{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.video-card{overflow:hidden}.videotop{padding:15px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}.videotitle{font-weight:800;font-size:15px}.videostage{position:relative;margin:16px;background:#111827;border-radius:14px;overflow:hidden;height:min(55vw,570px);min-height:330px;max-height:570px}.videoCard{position:absolute;inset:0;background:#101827;overflow:hidden;width:100%;height:100%}.videoCard:nth-child(2){z-index:1}.videoCard:first-child{z-index:2;inset:16px 16px auto auto;width:clamp(115px,22%,190px);height:auto;aspect-ratio:16/10;border:2px solid #fff;border-radius:11px;box-shadow:0 5px 22px #0005}.videoCard video{width:100%;height:100%;object-fit:cover;display:block}.videoLabel{position:absolute;left:10px;bottom:9px;background:#111827bd;color:#fff;padding:5px 8px;border-radius:7px;font-size:11px}.videoPlaceholder{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#aab5c8;font-size:13px;padding:15px}.stagebottom{padding:0 16px 16px}.statusline{font-size:12px;color:#7c879a;padding:0 2px 12px}.maincontrols{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}.maincontrols .btn{min-width:120px}.callcontrols{display:flex;justify-content:center;gap:8px;margin-top:9px;flex-wrap:wrap}.callcontrols .btn{font-size:12px}.notice{margin:12px 16px;padding:11px 13px;border:1px solid #f3dfae;background:#fff9e9;color:#92702b;border-radius:10px;font-size:12px}.chat-card{display:flex;flex-direction:column;min-height:calc(100vh - 110px);max-height:calc(100vh - 110px)}.chathead{padding:15px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.chathead strong{font-size:14px}.chatbox{display:flex;flex:1;min-height:0;flex-direction:column;border:0;border-radius:0;background:#fff;margin:0}.chatstatus{padding:10px 14px;border-bottom:1px solid var(--line);font-size:11px;color:#8993a6;background:#fbfcfe}.messages{padding:15px;display:flex;flex-direction:column;gap:9px;flex:1;min-height:240px;overflow:auto;background:linear-gradient(#fff,#fcfdff)}.bubble{max-width:86%;padding:9px 12px;border-radius:13px 13px 13px 4px;background:#f0f3f8;color:#344057;align-self:flex-start;overflow-wrap:anywhere;white-space:pre-wrap;font-size:13px}.bubble.me{background:#eaf1ff;color:#315fc9;align-self:flex-end;border-radius:13px 13px 4px 13px}.empty{color:#a0a8b7;text-align:center;margin:auto;padding:18px;font-size:12px}.sendrow{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:#fff}.sendrow .input{min-width:0;flex:1}.sendrow .btn{padding:10px 13px}.chatfoot{padding:9px 13px;color:#a0a8b7;font-size:10px;border-top:1px solid #f1f3f7}.hidden{display:none!important}
+@media(max-width:1180px){.workspace{grid-template-columns:250px minmax(360px,1fr);}.rightcol{grid-column:1/-1}.chat-card{min-height:380px;max-height:480px}.messages{min-height:210px}}
+@media(max-width:760px){.app{display:block}.topbar{height:58px;padding:0 13px;gap:10px}.brand{min-width:0;font-size:18px}.topnav{display:none}.topright{margin-left:auto}.workspace{display:flex;flex-direction:column;padding:10px;gap:11px}.leftcol{order:2;width:100%}.centercol{order:1;width:100%}.rightcol{order:3;width:100%}.videostage{height:57vh;min-height:270px;max-height:520px;margin:10px}.video-card{border-radius:13px}.chat-card{min-height:390px;max-height:65vh}.fields{grid-template-columns:1fr 1fr}.videotop{padding:12px 14px}.maincontrols .btn{flex:1;min-width:0}.callcontrols .btn{flex:1}.leftcol .card{border-radius:14px}.profilebox{padding:13px}.pad{padding:13px}}
+@media(max-width:390px){.workspace{padding:7px}.videostage{height:52vh}.btn{padding:10px 11px}.fields{gap:8px}.maincontrols{gap:7px}}
 </style>
 </head>
-<body><div class="wrap">
-<header class="top"><div class="brand"><span class="mark">✦</span> AnonChat</div><div class="online">● Анонимное общение</div></header>
-<section class="hero"><div class="eyebrow">Случайные знакомства</div><h1>Видеочат один на один.</h1><p>Общайся анонимно: найди собеседника, переписывайся и переходи к звонку только по взаимному согласию.</p></section>
-
-<section class="panel" style="margin-bottom:16px"><div class="panelhead"><strong>🔐 Аккаунт AnonChat</strong><span class="tag" id="authState">Гость</span></div><div class="pad"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px"><div><label class="fieldlabel" for="authEmail">Email</label><input class="input" id="authEmail" type="email" placeholder="name@example.com" autocomplete="email"></div><div><label class="fieldlabel" for="authPassword">Пароль (от 8 символов)</label><input class="input" id="authPassword" type="password" minlength="8" placeholder="Пароль" autocomplete="current-password"></div></div><div class="actions"><button class="btn primary" id="registerBtn" type="button">Создать аккаунт</button><button class="btn secondary" id="loginBtn" type="button">Войти</button><button class="btn danger" id="logoutBtn" type="button" style="display:none">Выйти</button></div><div id="authMessage" style="font-size:13px;color:#a9b9d6;margin-top:9px">Гостевой режим доступен без регистрации. Аккаунт позволит хранить профиль на сервере.</div></div></section>\n<section class="panel" style="margin-bottom:16px"><div class="panelhead"><strong>👤 Профиль и поиск</strong><span class="tag" id="profileMode">Гостевой режим</span></div><div class="pad">
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px">
-<div><label class="fieldlabel" for="nickname">Твой псевдоним</label><input class="input" id="nickname" maxlength="24" placeholder="Например, Лис" autocomplete="nickname"></div>
-<div><label class="fieldlabel" for="age">Возраст</label><input class="input" id="age" type="number" min="18" max="99" placeholder="18+" /></div>
-<div><label class="fieldlabel" for="gender">Пол</label><select class="input" id="gender"><option value="any">Не указывать</option><option value="male">Мужской</option><option value="female">Женский</option></select></div>
-<div><label class="fieldlabel" for="country">Страна</label><select class="input" id="country"><option value="">Не указана</option><option>Украина</option><option>Польша</option><option>Германия</option><option>Чехия</option><option>Молдова</option><option>Другая</option></select></div>
-<div><label class="fieldlabel" for="language">Язык общения</label><select class="input" id="language"><option value="ru">Русский</option><option value="uk">Українська</option><option value="en">English</option></select></div>
+<body>
+<div class="app">
+<header class="topbar">
+ <div class="brand"><span class="mark">✦</span><span>AnonChat</span></div>
+ <nav class="topnav"><button class="navitem active" type="button">Знакомства</button><button class="navitem" type="button" onclick="document.getElementById('profileCard').scrollIntoView({behavior:'smooth'})">Мой профиль</button><button class="navitem" type="button" onclick="document.getElementById('filtersCard').scrollIntoView({behavior:'smooth'})">Фильтры</button></nav>
+ <div class="topright"><span class="online"><i class="dot"></i> Онлайн</span><div class="avatar">A</div></div>
+</header>
+<main class="workspace">
+<aside class="column leftcol">
+ <section class="card" style="margin-bottom:12px">
+  <div class="profilebox"><div class="profilepic">☺</div><div class="profilemeta"><b id="profileHeading">Мой профиль</b><span id="profileMode">Гостевой режим</span></div><span class="tag" id="authState">Гость</span></div>
+  <div class="pad">
+   <div class="sectiontitle">Аккаунт</div>
+   <div class="fields">
+    <div class="fieldwide"><label class="fieldlabel" for="authEmail">Email</label><input class="input" id="authEmail" type="email" placeholder="name@example.com" autocomplete="email"></div>
+    <div class="fieldwide"><label class="fieldlabel" for="authPassword">Пароль</label><input class="input" id="authPassword" type="password" minlength="8" placeholder="Не менее 8 символов" autocomplete="current-password"></div>
+   </div>
+   <div class="actions"><button class="btn primary" id="registerBtn" type="button">Регистрация</button><button class="btn secondary" id="loginBtn" type="button">Войти</button><button class="btn danger full hidden" id="logoutBtn" type="button">Выйти из аккаунта</button></div>
+   <div class="authmessage" id="authMessage">Можно начать общение как гость или войти в аккаунт.</div>
+  </div>
+ </section>
+ <section class="card" id="profileCard">
+  <div class="cardhead"><span>Личные данные</span><span class="tag">18+</span></div>
+  <div class="pad">
+   <div class="fields">
+    <div class="fieldwide"><label class="fieldlabel" for="nickname">Псевдоним</label><input class="input" id="nickname" maxlength="24" placeholder="Как тебя называть?"></div>
+    <div><label class="fieldlabel" for="age">Возраст</label><input class="input" id="age" type="number" min="18" max="99" placeholder="18+"></div>
+    <div><label class="fieldlabel" for="gender">Пол</label><select class="input" id="gender"><option value="any">Не указан</option><option value="male">Мужской</option><option value="female">Женский</option></select></div>
+    <div class="fieldwide"><label class="fieldlabel" for="country">Страна</label><select class="input" id="country"><option value="">Не указана</option><option>Украина</option><option>Польша</option><option>Германия</option><option>Чехия</option><option>Молдова</option><option>Другая</option></select></div>
+    <div class="fieldwide"><label class="fieldlabel" for="language">Язык общения</label><select class="input" id="language"><option value="ru">Русский</option><option value="uk">Українська</option><option value="en">English</option></select></div>
+   </div>
+   <button class="btn secondary full" id="saveProfile" type="button" style="margin-top:12px">Сохранить профиль</button>
+   <div id="profileSaved" class="authmessage"></div>
+  </div>
+ </section>
+ <section class="card" id="filtersCard" style="margin-top:12px">
+  <div class="cardhead"><span>Поиск собеседника</span><span class="tag">Фильтры</span></div>
+  <div class="pad">
+   <div style="margin-bottom:10px"><label class="fieldlabel" for="filterGender">Кого ищем</label><select class="input" id="filterGender"><option value="any">Любой пол</option><option value="male">Мужчина</option><option value="female">Женщина</option></select></div>
+   <div style="margin-bottom:10px"><label class="fieldlabel" for="filterCountry">Страна</label><select class="input" id="filterCountry"><option value="">Любая страна</option><option>Украина</option><option>Польша</option><option>Германия</option><option>Чехия</option><option>Молдова</option></select></div>
+   <div><label class="fieldlabel" for="filterLanguage">Язык</label><select class="input" id="filterLanguage"><option value="any">Любой язык</option><option value="ru">Русский</option><option value="uk">Українська</option><option value="en">English</option></select></div>
+  </div>
+ </section>
+</aside>
+<section class="column centercol">
+ <section class="card video-card">
+  <div class="videotop"><div><div class="videotitle">Случайный видеочат</div><div class="small muted">Новые знакомства по всему миру</div></div><span class="tag" id="connection">Не подключено</span></div>
+  <div class="videostage">
+   <div class="videoCard"><video id="remoteVideo" autoplay playsinline></video><div class="videoPlaceholder" id="remotePlaceholder">✦<br>Собеседник появится здесь<br><span class="small">Нажми «Начать поиск»</span></div><div class="videoLabel">Собеседник</div></div>
+   <div class="videoCard"><video id="localVideo" autoplay playsinline muted></video><div class="videoPlaceholder" id="localPlaceholder">Твоя камера выключена</div><div class="videoLabel">Вы</div></div>
+  </div>
+  <div id="incomingCall" class="notice hidden"><b id="incomingText">Вам поступает звонок</b><div class="actions"><button class="btn primary" id="acceptCall">Принять</button><button class="btn danger" id="rejectCall">Отклонить</button></div></div>
+  <div class="stagebottom">
+   <div class="statusline" id="status">Нажми «Начать поиск», чтобы найти собеседника.</div>
+   <div class="maincontrols"><button class="btn primary" id="start">Начать поиск</button><button class="btn secondary" id="next" disabled>Следующий</button></div>
+   <div class="callcontrols"><button class="btn outline" id="videoCall" disabled>▣ Видеозвонок</button><button class="btn outline" id="audioCall" disabled>☎ Аудиозвонок</button><button class="btn danger" id="endCall" disabled>Завершить</button><button class="btn danger" id="report" disabled>Пожаловаться</button></div>
+  </div>
+  <div class="notice">Соблюдай осторожность: не сообщай незнакомцам личные данные и не отправляй материалы без согласия.</div>
+ </section>
+</section>
+<aside class="column rightcol">
+ <section class="card chat-card standalone-chat">
+  <div class="chathead"><div><strong>Сообщения</strong><div class="small muted">Личный диалог с собеседником</div></div><span class="tag">Чат</span></div>
+  <div class="chatbox"><div class="chatstatus" id="chatStatus">Ожидание подключения</div><div class="messages" id="messages"><div class="empty">Когда найдёшь собеседника, переписка появится здесь.</div></div>
+   <form class="sendrow" id="sendform"><input class="input" id="message" maxlength="1000" placeholder="Написать сообщение…" disabled autocomplete="off"><button class="btn primary" id="send" disabled>➤</button></form>
+  </div>
+  <div class="chatfoot">Не делись паролями, адресом и платёжными данными.</div>
+ </section>
+</aside>
+</main>
 </div>
-<div style="margin-top:13px;padding-top:13px;border-top:1px solid var(--line)"><b style="font-size:13px">Кого искать</b><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-top:9px">
-<div><label class="fieldlabel" for="filterGender">Пол собеседника</label><select class="input" id="filterGender"><option value="any">Любой</option><option value="male">Мужской</option><option value="female">Женский</option></select></div>
-<div><label class="fieldlabel" for="filterCountry">Страна собеседника</label><select class="input" id="filterCountry"><option value="">Любая страна</option><option>Украина</option><option>Польша</option><option>Германия</option><option>Чехия</option><option>Молдова</option></select></div>
-<div><label class="fieldlabel" for="filterLanguage">Язык собеседника</label><select class="input" id="filterLanguage"><option value="any">Любой язык</option><option value="ru">Русский</option><option value="uk">Українська</option><option value="en">English</option></select></div>
-</div><div class="actions"><button class="btn secondary" id="saveProfile" type="button">Сохранить профиль на этом устройстве</button><span id="profileSaved" style="align-self:center;color:#83e6bd;font-size:12px"></span></div><p style="color:var(--muted);font-size:12px;margin:8px 0 0">Пока доступен гостевой профиль: данные и история хранятся только в этом браузере. Для настоящей регистрации с email и входа с других устройств потребуется подключить постоянную базу данных.</p></div>
-</div></section>\n<div class="layout"><section class="panel">
-<div class="panelhead"><strong>📹 Случайный видеочат</strong><span class="tag" id="connection">Не подключено</span></div>
-<div class="pad">
-
-<div class="actions"><button class="btn primary" id="start">Найти собеседника</button><button class="btn secondary" id="next" disabled>Следующий</button></div>
-<div class="videos">
-<div class="videoCard"><video id="localVideo" autoplay playsinline muted></video><div class="videoPlaceholder" id="localPlaceholder">Твоё видео<br>Камера выключена</div><div class="videoLabel">Ты</div></div>
-<div class="videoCard"><video id="remoteVideo" autoplay playsinline></video><div class="videoPlaceholder" id="remotePlaceholder">Видео собеседника<br>Ожидание подключения</div><div class="videoLabel">Собеседник</div></div>
-</div>
-<div id="incomingCall" class="notice" style="display:none;margin-top:12px"><b id="incomingText">Вам поступает звонок</b><div class="actions"><button class="btn primary" id="acceptCall">Принять</button><button class="btn danger" id="rejectCall">Отклонить</button></div></div>
-<div class="actions" id="callActions"><button class="btn primary" id="videoCall" disabled>📹 Видеозвонок</button><button class="btn secondary" id="audioCall" disabled>📞 Аудиозвонок</button><button class="btn danger" id="endCall" disabled>Завершить звонок</button></div>
-<div class="actions"><button class="btn danger" id="report" disabled>Пожаловаться и сменить</button></div>
-</div></section>
-<aside class="panel side"><h2>Как это работает</h2>
-<div class="feature"><span class="ico">📷</span><div><b>Камера и микрофон</b><br>Браузер запросит разрешение перед началом звонка.</div></div>
-<div class="feature"><span class="ico">🔗</span><div><b>Прямое соединение</b><br>Видео передаётся между браузерами через WebRTC.</div></div>
-<div class="feature"><span class="ico">⏭️</span><div><b>Следующий собеседник</b><br>Заверши разговор и найди нового человека.</div></div>
-<div class="feature"><span class="ico">🛡️</span><div><b>Осторожность</b><br>Не показывай документы, адрес и другие личные данные.</div></div>
-<div class="notice">Для работы камера требует HTTPS и разрешения браузера. На бесплатном сервере без TURN некоторые сети могут не соединиться. Не используй видеочат с несовершеннолетними незнакомцами и не записывай звонки без согласия.</div>
-</aside></div><section class="panel standalone-chat"><div class="panelhead"><strong>💬 Обычный текстовый чат</strong><span class="tag">Отдельно от видео</span></div><div class="pad"><div class="chatbox"><div class="chatstatus" id="status">Нажми «Найти собеседника»</div><div class="messages" id="messages"><div class="empty">Текстовые сообщения появятся здесь</div></div>
-<form class="sendrow" id="sendform"><input class="input" id="message" maxlength="1000" placeholder="Напиши сообщение…" disabled autocomplete="off"><button class="btn secondary" id="send" disabled>Отправить</button></form></div></div></section><footer class="footer">AnonChat · Анонимное общение · Береги личные данные</footer></div>
 <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 <script>
 const SERVER_URL="https://anonchat-server-j40x.onrender.com";
