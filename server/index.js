@@ -6,6 +6,12 @@ const bcrypt=require("bcryptjs");
 const jwt=require("jsonwebtoken");
 const crypto=require("crypto");
 const app=express();
+app.use((req,res,next)=>{
+ const origin=req.headers.origin;
+ if(origin==="https://potaaa89.github.io"){res.setHeader("Access-Control-Allow-Origin",origin);res.setHeader("Vary","Origin");res.setHeader("Access-Control-Allow-Methods","GET,POST,PUT,OPTIONS");res.setHeader("Access-Control-Allow-Headers","Content-Type,Authorization");}
+ if(req.method==="OPTIONS")return res.sendStatus(204);
+ next();
+});
 app.use(express.json({limit:"32kb"}));
 const pool=process.env.DATABASE_URL?new Pool({connectionString:process.env.DATABASE_URL,ssl:process.env.DATABASE_URL.includes("localhost")?false:{rejectUnauthorized:false}}):null;
 const JWT_SECRET=process.env.JWT_SECRET||crypto.randomBytes(32).toString("hex");
