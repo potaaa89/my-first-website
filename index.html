@@ -52,11 +52,25 @@
 </head>
 <body><div class="wrap">
 <header class="top"><div class="brand"><span class="mark">✦</span> AnonChat</div><div class="online">● Анонимное общение</div></header>
-<section class="hero"><div class="eyebrow">Случайные знакомства</div><h1>Видеочат один на один.</h1><p>Разреши доступ к камере и микрофону, чтобы начать видеозвонок с незнакомцем.</p></section>
-<div class="layout"><section class="panel">
+<section class="hero"><div class="eyebrow">Случайные знакомства</div><h1>Видеочат один на один.</h1><p>Общайся анонимно: найди собеседника, переписывайся и переходи к звонку только по взаимному согласию.</p></section>
+
+<section class="panel" style="margin-bottom:16px"><div class="panelhead"><strong>👤 Профиль и поиск</strong><span class="tag" id="profileMode">Гостевой режим</span></div><div class="pad">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px">
+<div><label class="fieldlabel" for="nickname">Твой псевдоним</label><input class="input" id="nickname" maxlength="24" placeholder="Например, Лис" autocomplete="nickname"></div>
+<div><label class="fieldlabel" for="age">Возраст</label><input class="input" id="age" type="number" min="18" max="99" placeholder="18+" /></div>
+<div><label class="fieldlabel" for="gender">Пол</label><select class="input" id="gender"><option value="any">Не указывать</option><option value="male">Мужской</option><option value="female">Женский</option></select></div>
+<div><label class="fieldlabel" for="country">Страна</label><select class="input" id="country"><option value="">Не указана</option><option>Украина</option><option>Польша</option><option>Германия</option><option>Чехия</option><option>Молдова</option><option>Другая</option></select></div>
+<div><label class="fieldlabel" for="language">Язык общения</label><select class="input" id="language"><option value="ru">Русский</option><option value="uk">Українська</option><option value="en">English</option></select></div>
+</div>
+<div style="margin-top:13px;padding-top:13px;border-top:1px solid var(--line)"><b style="font-size:13px">Кого искать</b><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-top:9px">
+<div><label class="fieldlabel" for="filterGender">Пол собеседника</label><select class="input" id="filterGender"><option value="any">Любой</option><option value="male">Мужской</option><option value="female">Женский</option></select></div>
+<div><label class="fieldlabel" for="filterCountry">Страна собеседника</label><select class="input" id="filterCountry"><option value="">Любая страна</option><option>Украина</option><option>Польша</option><option>Германия</option><option>Чехия</option><option>Молдова</option></select></div>
+<div><label class="fieldlabel" for="filterLanguage">Язык собеседника</label><select class="input" id="filterLanguage"><option value="any">Любой язык</option><option value="ru">Русский</option><option value="uk">Українська</option><option value="en">English</option></select></div>
+</div><div class="actions"><button class="btn secondary" id="saveProfile" type="button">Сохранить профиль на этом устройстве</button><span id="profileSaved" style="align-self:center;color:#83e6bd;font-size:12px"></span></div><p style="color:var(--muted);font-size:12px;margin:8px 0 0">Пока доступен гостевой профиль: данные и история хранятся только в этом браузере. Для настоящей регистрации с email и входа с других устройств потребуется подключить постоянную базу данных.</p></div>
+</div></section>\n<div class="layout"><section class="panel">
 <div class="panelhead"><strong>📹 Случайный видеочат</strong><span class="tag" id="connection">Не подключено</span></div>
 <div class="pad">
-<label class="fieldlabel" for="nickname">Твой псевдоним</label><input class="input" id="nickname" maxlength="24" placeholder="Например, Лис" autocomplete="off">
+
 <div class="actions"><button class="btn primary" id="start">Найти собеседника</button><button class="btn secondary" id="next" disabled>Следующий</button></div>
 <div class="videos">
 <div class="videoCard"><video id="localVideo" autoplay playsinline muted></video><div class="videoPlaceholder" id="localPlaceholder">Твоё видео<br>Камера выключена</div><div class="videoLabel">Ты</div></div>
@@ -72,13 +86,20 @@
 <div class="feature"><span class="ico">⏭️</span><div><b>Следующий собеседник</b><br>Заверши разговор и найди нового человека.</div></div>
 <div class="feature"><span class="ico">🛡️</span><div><b>Осторожность</b><br>Не показывай документы, адрес и другие личные данные.</div></div>
 <div class="notice">Для работы камера требует HTTPS и разрешения браузера. На бесплатном сервере без TURN некоторые сети могут не соединиться. Не используй видеочат с несовершеннолетними незнакомцами и не записывай звонки без согласия.</div>
-</aside></div><section class="panel standalone-chat"><div class="panelhead"><strong>💬 Обычный текстовый чат</strong><span class="tag">Отдельно от видео</span></div><div class="pad"><div class="chatbox"><div class="chatstatus" id="status">Нажми «Включить камеру и найти»</div><div class="messages" id="messages"><div class="empty">Текстовые сообщения появятся здесь</div></div>
-<form class="sendrow" id="sendform"><input class="input" id="message" maxlength="1000" placeholder="Напиши сообщение…" disabled autocomplete="off"><button class="btn secondary" id="send" disabled>Отправить</button></form></div></div></section><footer class="footer">AnonChat · Видеочат в тестовом режиме · Береги личные данные</footer></div>
+</aside></div><section class="panel standalone-chat"><div class="panelhead"><strong>💬 Обычный текстовый чат</strong><span class="tag">Отдельно от видео</span></div><div class="pad"><div class="chatbox"><div class="chatstatus" id="status">Нажми «Найти собеседника»</div><div class="messages" id="messages"><div class="empty">Текстовые сообщения появятся здесь</div></div>
+<form class="sendrow" id="sendform"><input class="input" id="message" maxlength="1000" placeholder="Напиши сообщение…" disabled autocomplete="off"><button class="btn secondary" id="send" disabled>Отправить</button></form></div></div></section><footer class="footer">AnonChat · Анонимное общение · Береги личные данные</footer></div>
 <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 <script>
 const SERVER_URL="https://anonchat-server-j40x.onrender.com";
 const $=id=>document.getElementById(id),rtcConfig={iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]};
 let socket=null,matched=false,localStream=null,peer=null,pendingCandidates=[],callMode=null,callStatus="idle",incomingMode=null;
+
+const profileKeys=["nickname","age","gender","country","language","filterGender","filterCountry","filterLanguage"];
+function profileData(){return {nickname:$("nickname").value.trim().slice(0,24)||"Гость",age:Math.max(18,Math.min(99,Number($("age").value)||18)),gender:$("gender").value,country:$("country").value,language:$("language").value}}
+function searchData(){return {gender:$("filterGender").value,country:$("filterCountry").value,language:$("filterLanguage").value}}
+function saveProfile(){const data={};profileKeys.forEach(k=>data[k]=$(k).value);localStorage.setItem("anonchat_profile",JSON.stringify(data));$("profileSaved").textContent="Сохранено";$("profileMode").textContent="Гостевой профиль"}
+function loadProfile(){try{const d=JSON.parse(localStorage.getItem("anonchat_profile")||"{}");profileKeys.forEach(k=>{if(d[k]!==undefined)$(k).value=d[k]})}catch(e){}}
+loadProfile();$("saveProfile").onclick=saveProfile;
 function status(t){$("status").textContent=t}
 function addMessage(t,own=false){const e=document.createElement("div");e.className="bubble"+(own?" me":"");e.textContent=t;$("messages").appendChild(e);$("messages").scrollTop=$("messages").scrollHeight}
 function controls(){$("next").disabled=!socket?.connected;$("videoCall").disabled=!matched||callStatus!=="idle";$("audioCall").disabled=!matched||callStatus!=="idle";$("endCall").disabled=callStatus==="idle";$("message").disabled=!matched;$("send").disabled=!matched;$("report").disabled=!matched}
@@ -89,7 +110,7 @@ function createPeer(){closePeer();peer=new RTCPeerConnection(rtcConfig);localStr
 async function flushIce(){if(peer?.remoteDescription){for(const c of pendingCandidates){try{await peer.addIceCandidate(c)}catch(e){}}pendingCandidates=[]}}
 async function offer(){const p=createPeer(),o=await p.createOffer();await p.setLocalDescription(o);socket.emit("webrtc_offer",p.localDescription)}
 function resetCall(t){callStatus="idle";callMode=null;incomingMode=null;$("incomingCall").style.display="none";stopMedia();controls();if(t)status(t)}
-function connect(){if(socket?.connected){socket.emit("find");return}$("connection").textContent="Подключение…";socket=io(SERVER_URL,{transports:["websocket","polling"],timeout:20000});socket.on("connect",()=>{$("connection").textContent="Подключено";socket.emit("find")});socket.on("connect_error",()=>status("Не удалось подключиться к серверу."));socket.on("disconnect",()=>{matched=false;resetCall("Связь с сервером потеряна.");$("connection").textContent="Нет связи"});socket.on("searching",()=>{matched=false;resetCall("Ищем собеседника…")});socket.on("matched",()=>{matched=true;callStatus="idle";$("messages").innerHTML="";controls();status("Собеседник найден! Общайтесь в чате. Для звонка отправьте приглашение.");addMessage("Звонок начнётся только после согласия собеседника.")});
+function connect(){if(socket?.connected){socket.emit("find",{profile:profileData(),filters:searchData()});return}$("connection").textContent="Подключение…";socket=io(SERVER_URL,{transports:["websocket","polling"],timeout:20000});socket.on("connect",()=>{$("connection").textContent="Подключено";socket.emit("find")});socket.on("connect_error",()=>status("Не удалось подключиться к серверу."));socket.on("disconnect",()=>{matched=false;resetCall("Связь с сервером потеряна.");$("connection").textContent="Нет связи"});socket.on("searching",()=>{matched=false;resetCall("Ищем собеседника…")});socket.on("matched",()=>{matched=true;callStatus="idle";$("messages").innerHTML="";controls();status("Собеседник найден! Общайтесь в чате. Для звонка отправьте приглашение.");addMessage("Звонок начнётся только после согласия собеседника.")});
 socket.on("call_incoming",d=>{incomingMode=d?.mode==="audio"?"audio":"video";$("incomingText").textContent=incomingMode==="video"?"Вам поступает видеозвонок. Принять?":"Вам поступает аудиозвонок. Принять?";$("incomingCall").style.display="block";status("Входящий звонок — ожидаем ответа.")});
 socket.on("call_accepted",async()=>{try{await getMedia(callMode);callStatus="active";controls();status("Собеседник принял звонок. Подключаемся…");await offer()}catch(e){socket.emit("call_end");resetCall(e.message)}});
 socket.on("call_rejected",()=>resetCall("Собеседник отклонил звонок. Чат продолжается."));socket.on("call_cancelled",()=>resetCall("Звонок отменён."));socket.on("call_ended",()=>resetCall("Собеседник завершил звонок. Чат продолжается."));
@@ -97,7 +118,7 @@ socket.on("webrtc_offer",async o=>{try{const p=createPeer();await p.setRemoteDes
 socket.on("webrtc_answer",async a=>{if(peer){await peer.setRemoteDescription(a);await flushIce()}});socket.on("webrtc_ice",async c=>{if(peer?.remoteDescription)await peer.addIceCandidate(c);else pendingCandidates.push(c)});
 socket.on("chat_message",d=>{if(d?.text)addMessage(d.text)});socket.on("partner_left",()=>{matched=false;resetCall("Собеседник покинул чат.");addMessage("Собеседник отключился.")});socket.on("rate_limited",()=>status("Слишком много сообщений."));socket.on("report_received",()=>status("Жалоба отправлена."))}
 $("start").onclick=connect;
-$("next").onclick=()=>{if(socket?.connected){matched=false;resetCall("Ищем следующего собеседника…");$("messages").innerHTML="";socket.emit("next");controls()}};
+$("next").onclick=()=>{if(socket?.connected){matched=false;resetCall("Ищем следующего собеседника…");$("messages").innerHTML="";socket.emit("next",{profile:profileData(),filters:searchData()});controls()}};
 $("videoCall").onclick=()=>{if(matched&&callStatus==="idle"){callMode="video";callStatus="calling";controls();status("Отправлено приглашение на видеозвонок…");socket.emit("call_request","video")}};
 $("audioCall").onclick=()=>{if(matched&&callStatus==="idle"){callMode="audio";callStatus="calling";controls();status("Отправлено приглашение на аудиозвонок…");socket.emit("call_request","audio")}};
 $("acceptCall").onclick=async()=>{try{$("incomingCall").style.display="none";callMode=incomingMode;await getMedia(callMode);callStatus="active";socket.emit("call_accept");controls();status("Звонок принят. Подключаемся…")}catch(e){socket.emit("call_reject");resetCall(e.name==="NotAllowedError"?"Разреши доступ к камере/микрофону.":e.message)}};
