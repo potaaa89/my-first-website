@@ -78,7 +78,7 @@ button,input,select{font:inherit}.app{min-height:100vh;display:grid;grid-templat
   <div class="chatbox"><div class="chatstatus" id="chatStatus">Ожидание подключения</div><div class="historypanel hidden" id="historyPanel"></div><div class="messages" id="messages"><div class="empty">Когда найдёшь собеседника, переписка появится здесь.</div></div>
    <form class="sendtools" id="sendform"><label class="attachbtn" for="photoInput" title="Отправить фото">＋</label><input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" hidden><input class="input" id="message" maxlength="1000" placeholder="Написать сообщение…" disabled autocomplete="off"><button class="btn primary" id="send" disabled>➤</button></form>
   </div>
-  <div class="chatfoot">Не делись паролями, адресом и платёжными данными.</div>
+  <div class="chatfoot">История сохраняется, если оба собеседника вошли в аккаунты. Не делись паролями и платёжными данными.</div>
  </section>
 </section>
 </main>
@@ -95,8 +95,8 @@ function searchData(){return {gender:$("filterGender").value,country:$("filterCo
 let authToken=localStorage.getItem("anonchat_token")||"";window.anonchatUserId="";
 async function authRequest(path,method,body){const r=await fetch(SERVER_URL+"/api/"+path,{method,headers:{"Content-Type":"application/json",...(authToken?{Authorization:"Bearer "+authToken}:{})},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({error:"Ошибка сервера"}));if(!r.ok)throw new Error(d.error||"Ошибка");return d}
 function showAuth(user){window.anonchatUserId=user?.id||"";$("authState").textContent=user?"Аккаунт":"Гость";$("logoutBtn").style.display=user?"inline-block":"none";$("registerBtn").style.display=user?"none":"inline-block";$("loginBtn").style.display=user?"none":"inline-block";$("authMessage").textContent=user?"Вы вошли как "+user.email+". Профиль синхронизирован с сервером.":"Гостевой режим: регистрация необязательна."}
-async function doAuth(mode){try{const d=await authRequest(mode,"POST",{email:$("authEmail").value,password:$("authPassword").value,nickname:profileData().nickname});authToken=d.token;localStorage.setItem("anonchat_token",authToken);showAuth(d.user);$("authMessage").textContent="Успешно! Аккаунт подключён."}catch(e){$("authMessage").textContent=e.message}}
-$("registerBtn").onclick=()=>doAuth("register");$("loginBtn").onclick=()=>doAuth("login");$("logoutBtn").onclick=()=>{authToken="";localStorage.removeItem("anonchat_token");showAuth(null)};
+async function doAuth(mode){try{const d=await authRequest(mode,"POST",{email:$("authEmail").value,password:$("authPassword").value,nickname:profileData().nickname});authToken=d.token;localStorage.setItem("anonchat_token",authToken);if(socket){socket.disconnect();socket=null}showAuth(d.user);$("authMessage").textContent="Успешно! Аккаунт подключён."}catch(e){$("authMessage").textContent=e.message}}
+$("registerBtn").onclick=()=>doAuth("register");$("loginBtn").onclick=()=>doAuth("login");$("logoutBtn").onclick=()=>{if(socket){socket.disconnect();socket=null}authToken="";localStorage.removeItem("anonchat_token");showAuth(null)};
 if(authToken)authRequest("me","GET").then(d=>{showAuth(d.user);$("nickname").value=d.user.nickname;$("age").value=d.user.age;$("gender").value=d.user.gender;$("country").value=d.user.country;$("language").value=d.user.language}).catch(()=>{authToken="";localStorage.removeItem("anonchat_token");showAuth(null)});else showAuth(null);
 function saveProfile(){const data={};profileKeys.forEach(k=>data[k]=$(k).value);localStorage.setItem("anonchat_profile",JSON.stringify(data));$("profileSaved").textContent="Сохранено";$("profileMode").textContent="Гостевой профиль"}
 function loadProfile(){try{const d=JSON.parse(localStorage.getItem("anonchat_profile")||"{}");profileKeys.forEach(k=>{if(d[k]!==undefined)$(k).value=d[k]})}catch(e){}}
