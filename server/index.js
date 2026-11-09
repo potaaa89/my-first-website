@@ -1,7 +1,21 @@
 const express=require("express");
 const http=require("http");
 const {Server}=require("socket.io");
+const {Pool}=require("pg");
+const bcrypt=require("bcryptjs");
+const jwt=require("jsonwebtoken");
+const crypto=require("crypto");
 const app=express();
+app.use(express.json({limit:"32kb"}));
+const pool=process.env.DATABASE_URL?new Pool({connectionString:process.env.DATABASE_URL,ssl:process.env.DATABASE_URL.includes("localhost")?false:{rejectUnauthorized:false}}):null;
+const JWT_SECRET=process.env.JWT_SECRET||crypto.randomBytes(32).toString("hex");
+async function initDb(){if(!pool)return;await pool.query(`CREATE TABLE IF NOT EXISTS users(id BIGSERIAL PRIMARY KEY,email TEXT UNIQUE NOT NULL,password_hash TEXT NOT NULL,nickname TEXT NOT NULL DEFAULT 'Гость',age SMALLINT NOT NULL DEFAULT 18,gender TEXT NOT NULL DEFAULT 'any',country TEXT NOT NULL DEFAULT '',language TEXT NOT NULL DEFAULT 'ru',created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`)}
+function auth(req,res,next){try{req.user=jwt.verify((req.headers.authorization||"").replace(/^Bearer /i,""),JWT_SECRET);next()}catch(e){res.status(401).json({error:"Нужно войти в аккаунт."})}}
+function publicUser(u){return {id:u.id,email:u.email,nickname:u.nickname,age:u.age,gender:u.gender,country:u.country,language:u.language}}
+app.post("/api/register",async(req,res)=>{try{if(!pool)return res.status(503).json({error:"База данных ещё не подключена на сервере."});const email=String(req.body.email||"").trim().toLowerCase(),password=String(req.body.password||""),nickname=String(req.body.nickname||"Гость").trim().slice(0,24)||"Гость";if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return res.status(400).json({error:"Укажи корректный email."});if(password.length<8)return res.status(400).json({error:"Пароль должен содержать минимум 8 символов."});const hash=await bcrypt.hash(password,12);const q=await pool.query("INSERT INTO users(email,password_hash,nickname) VALUES($1,$2,$3) RETURNING *",[email,hash,nickname]);const u=q.rows[0],token=jwt.sign({id:u.id,email:u.email},JWT_SECRET,{expiresIn:"30d"});res.json({token,user:publicUser(u)})}catch(e){if(e.code==="23505")return res.status(409).json({error:"Этот email уже зарегистрирован."});console.error(e);res.status(500).json({error:"Не удалось создать аккаунт."})}});
+app.post("/api/login",async(req,res)=>{try{if(!pool)return res.status(503).json({error:"База данных ещё не подключена на сервере."});const email=String(req.body.email||"").trim().toLowerCase(),password=String(req.body.password||"");const q=await pool.query("SELECT * FROM users WHERE email=$1",[email]);const u=q.rows[0];if(!u||!(await bcrypt.compare(password,u.password_hash)))return res.status(401).json({error:"Неверный email или пароль."});const token=jwt.sign({id:u.id,email:u.email},JWT_SECRET,{expiresIn:"30d"});res.json({token,user:publicUser(u)})}catch(e){console.error(e);res.status(500).json({error:"Не удалось выполнить вход."})}});
+app.get("/api/me",auth,async(req,res)=>{try{const q=await pool.query("SELECT * FROM users WHERE id=$1",[req.user.id]);if(!q.rows[0])return res.status(404).json({error:"Аккаунт не найден."});res.json({user:publicUser(q.rows[0])})}catch(e){res.status(500).json({error:"Ошибка профиля."})}});
+app.put("/api/me",auth,async(req,res)=>{try{const b=req.body,age=Math.max(18,Math.min(99,Number(b.age)||18)),gender=["male","female","any"].includes(b.gender)?b.gender:"any";const q=await pool.query("UPDATE users SET nickname=$1,age=$2,gender=$3,country=$4,language=$5 WHERE id=$6 RETURNING *",[String(b.nickname||"Гость").trim().slice(0,24)||"Гость",age,gender,String(b.country||"").slice(0,50),["ru","uk","en"].includes(b.language)?b.language:"ru",req.user.id]);res.json({user:publicUser(q.rows[0])})}catch(e){res.status(500).json({error:"Не удалось сохранить профиль."})}});
 app.get("/",(_req,res)=>res.send("AnonChat server is running"));
 app.get("/health",(_req,res)=>res.json({ok:true}));
 const server=http.createServer(app);
@@ -28,4 +42,4 @@ io.on("connection",socket=>{
  socket.on("report",reason=>{const p=partnerOf.get(socket.id);if(p)console.log("Report",{reporter:socket.id,reported:p,reason:String(reason||"other").slice(0,80),at:new Date().toISOString()});socket.emit("report_received");leaveChat(socket.id,true);findPartner(socket)});
  socket.on("disconnect",()=>{leaveChat(socket.id,true);lastMessages.delete(socket.id);searchPrefs.delete(socket.id)});
 });
-const PORT=process.env.PORT||3000;server.listen(PORT,"0.0.0.0",()=>console.log("AnonChat listening on "+PORT));
+const PORT=process.env.PORT||3000;initDb().then(()=>server.listen(PORT,"0.0.0.0",()=>console.log("AnonChat listening on "+PORT))).catch(e=>{console.error("Database initialization failed",e);process.exit(1)});
