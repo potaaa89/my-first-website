@@ -30,13 +30,14 @@ app.get("/",(_req,res)=>res.send("AnonChat server is running"));
 app.get("/health",(_req,res)=>res.json({ok:true}));
 const server=http.createServer(app);
 const io=new Server(server,{cors:{origin:["https://potaaa89.github.io"],methods:["GET","POST"]},transports:["websocket","polling"]});
-const waiting=[],partnerOf=new Map(),lastMessages=new Map(),callState=new Map(),searchPrefs=new Map();
+const waiting=[],partnerOf=new Map(),lastMessages=new Map(),callState=new Map(),searchPrefs=new Map(),conversationOf=new Map();
 function removeFromQueue(id){const i=waiting.indexOf(id);if(i!==-1)waiting.splice(i,1)}
 function relay(socket,event,payload){const p=partnerOf.get(socket.id);if(p&&io.sockets.sockets.has(p))io.to(p).emit(event,payload)}
 function endCall(id,notify=true){const p=partnerOf.get(id);callState.delete(id);if(p){callState.delete(p);if(notify&&io.sockets.sockets.has(p))io.to(p).emit("call_ended")}}
-function leaveChat(id,notify=true){removeFromQueue(id);endCall(id,notify);const p=partnerOf.get(id);partnerOf.delete(id);if(p){partnerOf.delete(p);if(notify&&io.sockets.sockets.has(p))io.to(p).emit("partner_left")}}
+function leaveChat(id,notify=true){removeFromQueue(id);endCall(id,notify);const p=partnerOf.get(id);partnerOf.delete(id);conversationOf.delete(id);if(p){partnerOf.delete(p);conversationOf.delete(p);if(notify&&io.sockets.sockets.has(p))io.to(p).emit("partner_left")}}
 function compatible(a,b){const ap=a?.profile||{},bp=b?.profile||{},af=a?.filters||{},bf=b?.filters||{};const ok=(f,v)=>!f||f==="any"||f===v;return ok(af.gender,bp.gender)&&(!af.country||af.country===bp.country)&&ok(af.language,bp.language)&&ok(bf.gender,ap.gender)&&(!bf.country||bf.country===ap.country)&&ok(bf.language,ap.language)}
-function findPartner(socket,prefs){if(partnerOf.has(socket.id))return;if(prefs)searchPrefs.set(socket.id,{profile:prefs.profile||{},filters:prefs.filters||{}});const mine=searchPrefs.get(socket.id)||{profile:{},filters:{}};removeFromQueue(socket.id);for(let i=0;i<waiting.length;i++){const cid=waiting[i],c=io.sockets.sockets.get(cid),other=searchPrefs.get(cid);if(c&&c.connected&&cid!==socket.id&&!partnerOf.has(cid)&&compatible(mine,other)){waiting.splice(i,1);partnerOf.set(socket.id,cid);partnerOf.set(cid,socket.id);socket.emit("matched",{partner:other?.profile||{}});c.emit("matched",{partner:mine.profile||{}});return}}if(!waiting.includes(socket.id))waiting.push(socket.id);socket.emit("searching")}
+function findPartner(socket,prefs){if(partnerOf.has(socket.id))return;if(prefs)searchPrefs.set(socket.id,{profile:prefs.profile||{},filters:prefs.filters||{}});const mine=searchPrefs.get(socket.id)||{profile:{},filters:{}};removeFromQueue(socket.id);for(let i=0;i<waiting.length;i++){const cid=waiting[i],c=io.sockets.sockets.get(cid),other=searchPrefs.get(cid);if(c&&c.connected&&cid!==socket.id&&!partnerOf.has(cid)&&compatible(mine,other)){waiting.splice(i,1);partnerOf.set(socket.id,cid);partnerOf.set(cid,socket.id);const uid=socket.data.user?.id,cidUser=c.data.user?.id;const key=uid&&cidUser?[Number(uid),Number(cidUser)].sort((a,b)=>a-b).join(":"):null;conversationOf.set(socket.id,key);conversationOf.set(cid,key);socket.emit("matched",{partner:{...(other?.profile||{}),id:cidUser||null}});c.emit("matched",{partner:{...(mine.profile||{}),id:uid||null}});return}}if(!waiting.includes(socket.id))waiting.push(socket.id);socket.emit("searching")}
+io.use((socket,next)=>{try{const token=socket.handshake.auth?.token;if(token)socket.data.user=jwt.verify(token,JWT_SECRET);next()}catch(e){next(new Error("Invalid authentication token"))}});
 io.on("connection",socket=>{
  socket.on("find",prefs=>findPartner(socket,prefs));
  socket.on("next",prefs=>{leaveChat(socket.id,true);findPartner(socket,prefs)});
@@ -53,4 +54,4 @@ io.on("connection",socket=>{
  socket.on("report",reason=>{const p=partnerOf.get(socket.id);if(p)console.log("Report",{reporter:socket.id,reported:p,reason:String(reason||"other").slice(0,80),at:new Date().toISOString()});socket.emit("report_received");leaveChat(socket.id,true);findPartner(socket)});
  socket.on("disconnect",()=>{leaveChat(socket.id,true);lastMessages.delete(socket.id);searchPrefs.delete(socket.id)});
 });
-const PORT=process.env.PORT||3000;initDb().then(()=>server.listen(PORT,"0.0.0.0",()=>console.log("AnonChat listening on "+PORT))).catch(e=>{console.error("Database initialization failed",e);process.exit(1)});
+const PORT=process.env.PORT||3000;initDb().then(ensureChatTables).then(()=>server.listen(PORT,"0.0.0.0",()=>console.log("AnonChat listening on "+PORT))).catch(e=>{console.error("Database initialization failed",e);process.exit(1)});
