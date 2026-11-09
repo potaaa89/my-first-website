@@ -30,7 +30,7 @@ button,input,select{font:inherit}.app{min-height:100vh;display:grid;grid-templat
     <div class="fieldwide"><label class="fieldlabel" for="authEmail">Email</label><input class="input" id="authEmail" type="email" placeholder="name@example.com" autocomplete="email"></div>
     <div class="fieldwide"><label class="fieldlabel" for="authPassword">Пароль</label><input class="input" id="authPassword" type="password" minlength="8" placeholder="Не менее 8 символов" autocomplete="current-password"></div>
    </div>
-   <div class="actions"><button class="btn primary" id="registerBtn" type="button">Регистрация</button><button class="btn secondary" id="loginBtn" type="button">Войти</button><button class="btn danger full hidden" id="logoutBtn" type="button">Выйти из аккаунта</button></div>
+   <div class="actions"><button class="btn primary" id="registerBtn" type="button">Регистрация</button><button class="btn secondary" id="loginBtn" type="button">Войти</button><button class="btn danger full" id="logoutBtn" type="button" style="display:none">Выйти из аккаунта</button></div>
    <div class="authmessage" id="authMessage">Можно начать общение как гость или войти в аккаунт.</div>
   </div>
  </section>
@@ -61,10 +61,10 @@ button,input,select{font:inherit}.app{min-height:100vh;display:grid;grid-templat
  <section class="card video-card">
   <div class="videotop"><div><div class="videotitle">Случайный видеочат</div><div class="small muted">Новые знакомства по всему миру</div></div><span class="tag" id="connection">Не подключено</span></div>
   <div class="videostage">
-   <div class="videoCard"><video id="remoteVideo" autoplay playsinline></video><div class="videoPlaceholder" id="remotePlaceholder">✦<br>Собеседник появится здесь<br><span class="small">Нажми «Начать поиск»</span></div><div class="videoLabel">Собеседник</div></div>
    <div class="videoCard"><video id="localVideo" autoplay playsinline muted></video><div class="videoPlaceholder" id="localPlaceholder">Твоя камера выключена</div><div class="videoLabel">Вы</div></div>
+   <div class="videoCard"><video id="remoteVideo" autoplay playsinline></video><div class="videoPlaceholder" id="remotePlaceholder">✦<br>Собеседник появится здесь<br><span class="small">Нажми «Начать поиск»</span></div><div class="videoLabel">Собеседник</div></div>
   </div>
-  <div id="incomingCall" class="notice hidden"><b id="incomingText">Вам поступает звонок</b><div class="actions"><button class="btn primary" id="acceptCall">Принять</button><button class="btn danger" id="rejectCall">Отклонить</button></div></div>
+  <div id="incomingCall" class="notice" style="display:none"><b id="incomingText">Вам поступает звонок</b><div class="actions"><button class="btn primary" id="acceptCall">Принять</button><button class="btn danger" id="rejectCall">Отклонить</button></div></div>
   <div class="stagebottom">
    <div class="statusline" id="status">Нажми «Начать поиск», чтобы найти собеседника.</div>
    <div class="maincontrols"><button class="btn primary" id="start">Начать поиск</button><button class="btn secondary" id="next" disabled>Следующий</button></div>
@@ -102,7 +102,7 @@ if(authToken)authRequest("me","GET").then(d=>{showAuth(d.user);$("nickname").val
 function saveProfile(){const data={};profileKeys.forEach(k=>data[k]=$(k).value);localStorage.setItem("anonchat_profile",JSON.stringify(data));$("profileSaved").textContent="Сохранено";$("profileMode").textContent="Гостевой профиль"}
 function loadProfile(){try{const d=JSON.parse(localStorage.getItem("anonchat_profile")||"{}");profileKeys.forEach(k=>{if(d[k]!==undefined)$(k).value=d[k]})}catch(e){}}
 loadProfile();$("saveProfile").onclick=async()=>{saveProfile();if(authToken){try{await authRequest("me","PUT",profileData());$("profileSaved").textContent="Сохранено в аккаунте"}catch(e){$("profileSaved").textContent=e.message}}};
-function status(t){$("status").textContent=t}
+function status(t){$("status").textContent=t;const cs=$("chatStatus");if(cs)cs.textContent=t}
 function addMessage(t,own=false){const e=document.createElement("div");e.className="bubble"+(own?" me":"");e.textContent=t;$("messages").appendChild(e);$("messages").scrollTop=$("messages").scrollHeight}
 function controls(){$("next").disabled=!socket?.connected;$("videoCall").disabled=!matched||callStatus!=="idle";$("audioCall").disabled=!matched||callStatus!=="idle";$("endCall").disabled=callStatus==="idle";$("message").disabled=!matched;$("send").disabled=!matched;$("report").disabled=!matched}
 function closePeer(){if(peer){peer.close();peer=null}pendingCandidates=[];$("remoteVideo").srcObject=null;$("remotePlaceholder").style.display="grid"}
