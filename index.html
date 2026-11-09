@@ -57,12 +57,13 @@
 <div class="panelhead"><strong>📹 Случайный видеочат</strong><span class="tag" id="connection">Не подключено</span></div>
 <div class="pad">
 <label class="fieldlabel" for="nickname">Твой псевдоним</label><input class="input" id="nickname" maxlength="24" placeholder="Например, Лис" autocomplete="off">
-<div class="actions"><button class="btn primary" id="start">Включить камеру и найти</button><button class="btn secondary" id="next" disabled>Следующий</button><button class="btn danger" id="stop" disabled>Выключить камеру</button></div>
+<div class="actions"><button class="btn primary" id="start">Найти собеседника</button><button class="btn secondary" id="next" disabled>Следующий</button></div>
 <div class="videos">
 <div class="videoCard"><video id="localVideo" autoplay playsinline muted></video><div class="videoPlaceholder" id="localPlaceholder">Твоё видео<br>Камера выключена</div><div class="videoLabel">Ты</div></div>
 <div class="videoCard"><video id="remoteVideo" autoplay playsinline></video><div class="videoPlaceholder" id="remotePlaceholder">Видео собеседника<br>Ожидание подключения</div><div class="videoLabel">Собеседник</div></div>
 </div>
-
+<div id="incomingCall" class="notice" style="display:none;margin-top:12px"><b id="incomingText">Вам поступает звонок</b><div class="actions"><button class="btn primary" id="acceptCall">Принять</button><button class="btn danger" id="rejectCall">Отклонить</button></div></div>
+<div class="actions" id="callActions"><button class="btn primary" id="videoCall" disabled>📹 Видеозвонок</button><button class="btn secondary" id="audioCall" disabled>📞 Аудиозвонок</button><button class="btn danger" id="endCall" disabled>Завершить звонок</button></div>
 <div class="actions"><button class="btn danger" id="report" disabled>Пожаловаться и сменить</button></div>
 </div></section>
 <aside class="panel side"><h2>Как это работает</h2>
@@ -76,34 +77,33 @@
 <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 <script>
 const SERVER_URL="https://anonchat-server-j40x.onrender.com";
-const $=id=>document.getElementById(id);
-const rtcConfig={iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]};
-let socket=null,matched=false,localStream=null,peer=null,pendingCandidates=[];
+const $=id=>document.getElementById(id),rtcConfig={iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]};
+let socket=null,matched=false,localStream=null,peer=null,pendingCandidates=[],callMode=null,callStatus="idle",incomingMode=null;
 function status(t){$("status").textContent=t}
-function addMessage(t,own=false){const el=document.createElement("div");el.className="bubble"+(own?" me":"");el.textContent=t;$("messages").appendChild(el);$("messages").scrollTop=$("messages").scrollHeight}
-function clearMessages(){$("messages").innerHTML=""}
-function updateControls(){$("next").disabled=!socket?.connected;$("stop").disabled=!localStream;$("report").disabled=!matched;$("message").disabled=!matched;$("send").disabled=!matched}
-function closePeer(){if(peer){peer.ontrack=null;peer.onicecandidate=null;peer.onconnectionstatechange=null;peer.close();peer=null;}pendingCandidates=[];$("remoteVideo").srcObject=null;$("remotePlaceholder").style.display="grid";}
-function stopCamera(){closePeer();if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null;}$("localVideo").srcObject=null;$("localPlaceholder").style.display="grid";updateControls();}
-async function ensureCamera(){if(localStream)return localStream;if(!navigator.mediaDevices?.getUserMedia)throw new Error("Камера недоступна. Открой сайт по HTTPS в современном браузере.");localStream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:640},height:{ideal:480},facingMode:"user"},audio:true});$("localVideo").srcObject=localStream;$("localPlaceholder").style.display="none";updateControls();return localStream;}
-async function flushCandidates(){if(!peer?.remoteDescription)return;for(const c of pendingCandidates){try{await peer.addIceCandidate(c);}catch(e){console.warn("ICE candidate",e);}}pendingCandidates=[];}
-function createPeer(){closePeer();peer=new RTCPeerConnection(rtcConfig);localStream.getTracks().forEach(track=>peer.addTrack(track,localStream));peer.ontrack=e=>{$("remoteVideo").srcObject=e.streams[0];$("remotePlaceholder").style.display="none";};peer.onicecandidate=e=>{if(e.candidate&&socket?.connected)socket.emit("webrtc_ice",e.candidate);};peer.onconnectionstatechange=()=>{if(!peer)return;const s=peer.connectionState;if(s==="connected")status("Видеосвязь установлена. Приятного общения!");else if(s==="failed")status("Не удалось установить видео. Нажми «Следующий» и попробуй ещё раз.");else if(s==="disconnected")status("Связь прервалась, пытаемся восстановить…");};return peer;}
-async function startCall(initiator){const pc=createPeer();if(initiator){const offer=await pc.createOffer();await pc.setLocalDescription(offer);socket.emit("webrtc_offer",pc.localDescription);}}
-async function connect(){try{status("Запрашиваем доступ к камере и микрофону…");await ensureCamera();if(socket?.connected){socket.emit("find");return;}$("connection").textContent="Подключение…";socket=io(SERVER_URL,{transports:["websocket","polling"],timeout:20000});socket.on("connect",()=>{$("connection").textContent="Подключено";socket.emit("find");});socket.on("connect_error",()=>{$("connection").textContent="Ошибка связи";status("Не удалось подключиться к серверу. Попробуй ещё раз.");});socket.on("disconnect",()=>{matched=false;closePeer();$("connection").textContent="Нет связи";updateControls();status("Соединение с сервером потеряно.");});
-socket.on("searching",()=>{matched=false;closePeer();updateControls();status("Ищем собеседника… Не закрывай страницу.");});
-socket.on("matched",async data=>{matched=true;clearMessages();updateControls();status("Собеседник найден! Подготавливаем видеосвязь…");addMessage("Вы подключены к новому собеседнику.");try{await startCall(Boolean(data&&data.initiator));}catch(e){console.error(e);status("Ошибка запуска видеосвязи. Проверь разрешения камеры.");}});
-socket.on("webrtc_offer",async offer=>{try{if(!localStream)await ensureCamera();const pc=createPeer();await pc.setRemoteDescription(offer);await flushCandidates();const answer=await pc.createAnswer();await pc.setLocalDescription(answer);socket.emit("webrtc_answer",pc.localDescription);}catch(e){console.error(e);status("Не удалось принять видеозвонок.");}});
-socket.on("webrtc_answer",async answer=>{try{if(peer){await peer.setRemoteDescription(answer);await flushCandidates();}}catch(e){console.error(e);}});
-socket.on("webrtc_ice",async candidate=>{try{if(peer?.remoteDescription)await peer.addIceCandidate(candidate);else pendingCandidates.push(candidate);}catch(e){console.warn(e);}});
-socket.on("chat_message",data=>{if(data&&typeof data.text==="string")addMessage(data.text);});
-socket.on("partner_left",()=>{matched=false;closePeer();updateControls();status("Собеседник покинул чат. Нажми «Найти» ещё раз.");addMessage("Собеседник отключился.");});
-socket.on("rate_limited",()=>status("Слишком много сообщений. Подожди немного."));
-socket.on("report_received",()=>status("Жалоба отправлена. Ищем другого собеседника…"));
-}catch(e){console.error(e);status(e.name==="NotAllowedError"?"Нет доступа к камере или микрофону. Разреши доступ в настройках браузера.":e.message||"Не удалось включить камеру.");}}
-$("start").addEventListener("click",connect);
-$("next").addEventListener("click",()=>{if(socket?.connected){matched=false;closePeer();clearMessages();updateControls();status("Ищем следующего собеседника…");socket.emit("next");}});
-$("stop").addEventListener("click",()=>{if(socket?.connected)socket.emit("next");matched=false;stopCamera();status("Камера и микрофон выключены.");});
-$("report").addEventListener("click",()=>{if(socket?.connected&&matched){socket.emit("report","video_chat_report");matched=false;closePeer();updateControls();clearMessages();}});
-$("sendform").addEventListener("submit",e=>{e.preventDefault();const v=$("message").value.trim();if(!v||!matched||!socket?.connected)return;socket.emit("chat_message",v);addMessage(v,true);$("message").value="";});
-window.addEventListener("beforeunload",()=>{if(socket)socket.disconnect();if(localStream)localStream.getTracks().forEach(t=>t.stop());});
+function addMessage(t,own=false){const e=document.createElement("div");e.className="bubble"+(own?" me":"");e.textContent=t;$("messages").appendChild(e);$("messages").scrollTop=$("messages").scrollHeight}
+function controls(){$("next").disabled=!socket?.connected;$("videoCall").disabled=!matched||callStatus!=="idle";$("audioCall").disabled=!matched||callStatus!=="idle";$("endCall").disabled=callStatus==="idle";$("message").disabled=!matched;$("send").disabled=!matched;$("report").disabled=!matched}
+function closePeer(){if(peer){peer.close();peer=null}pendingCandidates=[];$("remoteVideo").srcObject=null;$("remotePlaceholder").style.display="grid"}
+function stopMedia(){closePeer();if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null}$("localVideo").srcObject=null;$("localPlaceholder").style.display="grid"}
+async function getMedia(mode){if(!navigator.mediaDevices?.getUserMedia)throw new Error("Для звонка нужен HTTPS и современный браузер.");localStream=await navigator.mediaDevices.getUserMedia({video:mode==="video"?{width:{ideal:640},height:{ideal:480}}:false,audio:true});if(mode==="video"){$("localVideo").srcObject=localStream;$("localPlaceholder").style.display="none"}else{$("localPlaceholder").textContent="Аудиозвонок · камера выключена";$("localPlaceholder").style.display="grid"}}
+function createPeer(){closePeer();peer=new RTCPeerConnection(rtcConfig);localStream.getTracks().forEach(t=>peer.addTrack(t,localStream));peer.ontrack=e=>{$("remoteVideo").srcObject=e.streams[0];$("remotePlaceholder").style.display="none"};peer.onicecandidate=e=>{if(e.candidate)socket.emit("webrtc_ice",e.candidate)};peer.onconnectionstatechange=()=>{if(peer?.connectionState==="connected")status(callMode==="audio"?"Аудиозвонок установлен.":"Видеозвонок установлен.")};return peer}
+async function flushIce(){if(peer?.remoteDescription){for(const c of pendingCandidates){try{await peer.addIceCandidate(c)}catch(e){}}pendingCandidates=[]}}
+async function offer(){const p=createPeer(),o=await p.createOffer();await p.setLocalDescription(o);socket.emit("webrtc_offer",p.localDescription)}
+function resetCall(t){callStatus="idle";callMode=null;incomingMode=null;$("incomingCall").style.display="none";stopMedia();controls();if(t)status(t)}
+function connect(){if(socket?.connected){socket.emit("find");return}$("connection").textContent="Подключение…";socket=io(SERVER_URL,{transports:["websocket","polling"],timeout:20000});socket.on("connect",()=>{$("connection").textContent="Подключено";socket.emit("find")});socket.on("connect_error",()=>status("Не удалось подключиться к серверу."));socket.on("disconnect",()=>{matched=false;resetCall("Связь с сервером потеряна.");$("connection").textContent="Нет связи"});socket.on("searching",()=>{matched=false;resetCall("Ищем собеседника…")});socket.on("matched",()=>{matched=true;callStatus="idle";$("messages").innerHTML="";controls();status("Собеседник найден! Общайтесь в чате. Для звонка отправьте приглашение.");addMessage("Звонок начнётся только после согласия собеседника.")});
+socket.on("call_incoming",d=>{incomingMode=d?.mode==="audio"?"audio":"video";$("incomingText").textContent=incomingMode==="video"?"Вам поступает видеозвонок. Принять?":"Вам поступает аудиозвонок. Принять?";$("incomingCall").style.display="block";status("Входящий звонок — ожидаем ответа.")});
+socket.on("call_accepted",async()=>{try{await getMedia(callMode);callStatus="active";controls();status("Собеседник принял звонок. Подключаемся…");await offer()}catch(e){socket.emit("call_end");resetCall(e.message)}});
+socket.on("call_rejected",()=>resetCall("Собеседник отклонил звонок. Чат продолжается."));socket.on("call_cancelled",()=>resetCall("Звонок отменён."));socket.on("call_ended",()=>resetCall("Собеседник завершил звонок. Чат продолжается."));
+socket.on("webrtc_offer",async o=>{try{const p=createPeer();await p.setRemoteDescription(o);await flushIce();const ans=await p.createAnswer();await p.setLocalDescription(ans);socket.emit("webrtc_answer",p.localDescription)}catch(e){resetCall("Не удалось подключить звонок.")}});
+socket.on("webrtc_answer",async a=>{if(peer){await peer.setRemoteDescription(a);await flushIce()}});socket.on("webrtc_ice",async c=>{if(peer?.remoteDescription)await peer.addIceCandidate(c);else pendingCandidates.push(c)});
+socket.on("chat_message",d=>{if(d?.text)addMessage(d.text)});socket.on("partner_left",()=>{matched=false;resetCall("Собеседник покинул чат.");addMessage("Собеседник отключился.")});socket.on("rate_limited",()=>status("Слишком много сообщений."));socket.on("report_received",()=>status("Жалоба отправлена."))}
+$("start").onclick=connect;
+$("next").onclick=()=>{if(socket?.connected){matched=false;resetCall("Ищем следующего собеседника…");$("messages").innerHTML="";socket.emit("next");controls()}};
+$("videoCall").onclick=()=>{if(matched&&callStatus==="idle"){callMode="video";callStatus="calling";controls();status("Отправлено приглашение на видеозвонок…");socket.emit("call_request","video")}};
+$("audioCall").onclick=()=>{if(matched&&callStatus==="idle"){callMode="audio";callStatus="calling";controls();status("Отправлено приглашение на аудиозвонок…");socket.emit("call_request","audio")}};
+$("acceptCall").onclick=async()=>{try{$("incomingCall").style.display="none";callMode=incomingMode;await getMedia(callMode);callStatus="active";socket.emit("call_accept");controls();status("Звонок принят. Подключаемся…")}catch(e){socket.emit("call_reject");resetCall(e.name==="NotAllowedError"?"Разреши доступ к камере/микрофону.":e.message)}};
+$("rejectCall").onclick=()=>{socket?.emit("call_reject");resetCall("Звонок отклонён. Чат продолжается.")};
+$("endCall").onclick=()=>{socket?.emit("call_end");resetCall("Звонок завершён. Чат продолжается.")};
+$("report").onclick=()=>{if(socket?.connected&&matched){socket.emit("report","user_report");matched=false;resetCall("Жалоба отправлена.");$("messages").innerHTML="";controls()}};
+$("sendform").onsubmit=e=>{e.preventDefault();const v=$("message").value.trim();if(v&&matched&&socket?.connected){socket.emit("chat_message",v);addMessage(v,true);$("message").value=""}};
+window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.getTracks().forEach(t=>t.stop())});
 </script></body></html>
