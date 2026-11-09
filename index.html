@@ -1,51 +1,61 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1020">
-<title>AnonChat — анонимное общение</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1020">
+<title>AnonChat — анонимный чат</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1020;--panel:#121a2d;--panel2:#19243b;--line:#26344f;--text:#f4f7ff;--muted:#9ba9c3;--blue:#638cff;--green:#48d6a0}
+:root{color-scheme:dark;--bg:#0b1020;--panel:#121a2d;--line:#26344f;--text:#f4f7ff;--muted:#9ba9c3;--blue:#638cff;--green:#48d6a0}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0%,#1b2d55 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,Segoe UI,Arial,sans-serif;min-height:100vh}
-.wrap{max-width:1120px;margin:auto;padding:24px}.top{display:flex;align-items:center;justify-content:space-between;padding:8px 0 28px}.brand{font-size:21px;font-weight:800;letter-spacing:.3px;display:flex;gap:10px;align-items:center}.mark{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#77a0ff,#7458e8);display:grid;place-items:center;font-size:20px}.online{color:#83e6bd;font-size:13px}.hero{padding:42px 0 28px;max-width:720px}.eyebrow{color:#8eabff;font-weight:700;letter-spacing:1.7px;text-transform:uppercase;font-size:11px}h1{font-size:clamp(38px,7vw,66px);line-height:1.04;letter-spacing:-2px;margin:13px 0 18px}.hero p{font-size:18px;color:var(--muted);max-width:620px;margin:0}.layout{display:grid;grid-template-columns: minmax(0,1.5fr) minmax(260px,.8fr);gap:18px;margin-top:24px}.panel{background:linear-gradient(160deg,#151f35,#10182a);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 18px 55px #0003}.panelhead{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.panelhead strong{font-size:16px}.tag{font-size:12px;color:#a9b9d6;background:#202d47;padding:6px 10px;border-radius:20px}.chatbody{padding:20px}.fieldlabel{display:block;color:#b5c2d9;font-size:13px;margin:0 0 7px}.input,select{width:100%;border:1px solid #34435f;background:#0d1526;color:var(--text);padding:13px 14px;border-radius:11px;font:inherit;outline:none}.input:focus,select:focus{border-color:#7597ff}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}.btn{border:0;border-radius:11px;padding:13px 17px;font:700 14px inherit;cursor:pointer;transition:.2s}.primary{background:linear-gradient(110deg,#648eff,#765fe8);color:white;width:100%;margin-top:17px}.primary:hover{filter:brightness(1.12);transform:translateY(-1px)}.secondary{background:#202d47;color:#dce6ff}.chatbox{margin-top:18px;border:1px solid var(--line);border-radius:14px;background:#0c1424;min-height:245px;display:flex;flex-direction:column}.chatstatus{padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}.messages{padding:14px;display:flex;flex-direction:column;gap:10px;flex:1}.bubble{max-width:82%;padding:10px 13px;border-radius:13px;background:#202d47;color:#e8eeff;align-self:flex-start;overflow-wrap:anywhere}.bubble.me{background:#3156a6;align-self:flex-end}.empty{color:#7787a4;text-align:center;margin:auto;padding:24px 8px;font-size:13px}.sendrow{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}.sendrow .input{min-width:0}.sendrow button{white-space:nowrap}.side{padding:20px}.side h2{font-size:16px;margin:0 0 14px}.feature{display:flex;gap:12px;margin:17px 0;color:var(--muted);font-size:14px}.ico{width:34px;height:34px;flex:none;border-radius:10px;background:#202d47;display:grid;place-items:center;color:#9db5ff}.notice{margin-top:17px;border:1px solid #69552c;background:#352b18;color:#f2d69a;padding:12px;border-radius:12px;font-size:12px}.footer{padding:28px 0 8px;text-align:center;color:#73819b;font-size:12px}
-@media(max-width:760px){.wrap{padding:17px}.hero{padding-top:26px}.layout{grid-template-columns:1fr}.row{grid-template-columns:1fr 1fr}.top{padding-bottom:10px}}
-@media(max-width:420px){.row{grid-template-columns:1fr}h1{letter-spacing:-1.4px}.sendrow{flex-wrap:wrap}.sendrow .input{width:100%}}
+.wrap{max-width:1050px;margin:auto;padding:22px}.top{display:flex;align-items:center;justify-content:space-between;padding:8px 0 28px}.brand{font-size:21px;font-weight:800;display:flex;gap:10px;align-items:center}.mark{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#77a0ff,#7458e8);display:grid;place-items:center}.online{color:#83e6bd;font-size:13px}.hero{padding:26px 0 22px}.eyebrow{color:#8eabff;font-weight:700;letter-spacing:1.7px;text-transform:uppercase;font-size:11px}h1{font-size:clamp(36px,7vw,58px);line-height:1.05;letter-spacing:-2px;margin:12px 0}.hero p{color:var(--muted);font-size:17px;margin:0}.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(250px,.75fr);gap:17px}.panel{background:linear-gradient(160deg,#151f35,#10182a);border:1px solid var(--line);border-radius:19px;overflow:hidden;box-shadow:0 18px 55px #0003}.panelhead{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.tag{font-size:12px;color:#a9b9d6;background:#202d47;padding:6px 10px;border-radius:20px}.pad{padding:19px}.fieldlabel{display:block;color:#b5c2d9;font-size:13px;margin:0 0 7px}.input,select{width:100%;border:1px solid #34435f;background:#0d1526;color:var(--text);padding:12px 13px;border-radius:11px;font:inherit;outline:none}.input:focus,select:focus{border-color:#7597ff}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.btn{border:0;border-radius:11px;padding:12px 16px;font:700 14px Arial,sans-serif;cursor:pointer;transition:.2s}.btn:disabled{opacity:.45;cursor:not-allowed}.primary{background:linear-gradient(110deg,#648eff,#765fe8);color:white}.primary:hover:not(:disabled){filter:brightness(1.1)}.secondary{background:#202d47;color:#dce6ff}.danger{background:#4a2636;color:#ffc4d2}.actions{display:flex;gap:9px;margin-top:16px;flex-wrap:wrap}.actions .btn{flex:1}.chatbox{margin-top:17px;border:1px solid var(--line);border-radius:14px;background:#0c1424;min-height:300px;display:flex;flex-direction:column}.chatstatus{padding:11px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}.messages{padding:14px;display:flex;flex-direction:column;gap:9px;flex:1;min-height:230px;max-height:380px;overflow:auto}.bubble{max-width:82%;padding:10px 13px;border-radius:13px;background:#202d47;color:#e8eeff;align-self:flex-start;overflow-wrap:anywhere;white-space:pre-wrap}.bubble.me{background:#3156a6;align-self:flex-end}.empty{color:#7787a4;text-align:center;margin:auto;padding:24px 8px;font-size:13px}.sendrow{display:flex;gap:8px;padding:11px;border-top:1px solid var(--line)}.sendrow .input{min-width:0}.side{padding:19px}.side h2{font-size:16px;margin:0 0 13px}.feature{display:flex;gap:11px;margin:16px 0;color:var(--muted);font-size:13px}.ico{width:34px;height:34px;flex:none;border-radius:10px;background:#202d47;display:grid;place-items:center}.notice{margin-top:16px;border:1px solid #69552c;background:#352b18;color:#f2d69a;padding:12px;border-radius:12px;font-size:12px}.footer{padding:25px 0 5px;text-align:center;color:#73819b;font-size:12px}
+@media(max-width:760px){.wrap{padding:16px}.layout{grid-template-columns:1fr}.hero{padding-top:15px}}@media(max-width:420px){.row{grid-template-columns:1fr}.actions{flex-direction:column}.sendrow{flex-wrap:wrap}.sendrow .input{width:100%}}
 </style>
 </head>
-<body>
-<div class="wrap">
-<header class="top"><div class="brand"><span class="mark">✦</span> AnonChat</div><div class="online">● Демоверсия</div></header>
-<section class="hero"><div class="eyebrow">Новые знакомства без границ</div><h1>Скажи привет.<br>Останься анонимным.</h1><p>Простой способ начать разговор с новым человеком. Без публичного профиля и лишних данных.</p></section>
+<body><div class="wrap">
+<header class="top"><div class="brand"><span class="mark">✦</span> AnonChat</div><div class="online">● Анонимное общение</div></header>
+<section class="hero"><div class="eyebrow">Новые знакомства без границ</div><h1>Скажи привет.<br>Останься анонимным.</h1><p>Найди случайного собеседника и начни разговор.</p></section>
 <div class="layout">
-<section class="panel">
- <div class="panelhead"><strong>💬 Текстовый чат</strong><span class="tag">Тестовый интерфейс</span></div>
- <div class="chatbody">
-  <label class="fieldlabel" for="nickname">Твой псевдоним</label><input class="input" id="nickname" maxlength="24" placeholder="Например, Лис" autocomplete="off">
-  <div class="row">
-   <div><label class="fieldlabel" for="language">Язык общения</label><select id="language"><option>Любой</option><option>Русский</option><option>Українська</option><option>English</option></select></div>
-   <div><label class="fieldlabel" for="interest">Тема</label><select id="interest"><option>Любая тема</option><option>Знакомства</option><option>Музыка</option><option>Игры</option><option>Путешествия</option></select></div>
-  </div>
-  <button class="btn primary" id="start">Начать демо-чат</button>
-  <div class="chatbox"><div class="chatstatus" id="status">Ожидание запуска демо…</div><div class="messages" id="messages"><div class="empty">Здесь появится история тестового диалога</div></div>
-   <form class="sendrow" id="sendform"><input class="input" id="message" maxlength="500" placeholder="Напиши сообщение…" disabled autocomplete="off"><button class="btn secondary" id="send" disabled>Отправить</button></form>
-  </div>
- </div>
-</section>
-<aside class="panel side"><h2>Как это должно работать</h2>
- <div class="feature"><span class="ico">🎭</span><div><b>Анонимность</b><br>Общение под псевдонимом без публичного профиля.</div></div>
- <div class="feature"><span class="ico">🌍</span><div><b>Собеседники со всего мира</b><br>Подбор по языку и интересам.</div></div>
- <div class="feature"><span class="ico">⏭</span><div><b>Следующий собеседник</b><br>Возможность завершить разговор и начать новый.</div></div>
- <div class="feature"><span class="ico">🛡️</span><div><b>Безопасность</b><br>Пожаловаться на пользователя и заблокировать нежелательный контакт.</div></div>
- <div class="notice">Важно: сейчас это только демонстрация интерфейса. Сообщения не отправляются другим людям. Для настоящего онлайн-чата нужно подключить сервер и систему подбора собеседников.</div>
-</aside>
-</div>
-<footer class="footer">AnonChat · Демонстрационный проект · Не передавай незнакомцам личные данные</footer>
-</div>
+<section class="panel"><div class="panelhead"><strong>💬 Случайный текстовый чат</strong><span class="tag" id="connection">Не подключено</span></div>
+<div class="pad">
+<label class="fieldlabel" for="nickname">Твой псевдоним</label><input class="input" id="nickname" maxlength="24" placeholder="Например, Лис" autocomplete="off">
+<div class="row"><div><label class="fieldlabel" for="language">Язык общения</label><select id="language"><option>Любой</option><option>Русский</option><option>Українська</option><option>English</option></select></div><div><label class="fieldlabel" for="interest">Тема</label><select id="interest"><option>Любая тема</option><option>Знакомства</option><option>Музыка</option><option>Игры</option><option>Путешествия</option></select></div></div>
+<div class="actions"><button class="btn primary" id="start">Найти собеседника</button><button class="btn secondary" id="next" disabled>Следующий</button></div>
+<div class="chatbox"><div class="chatstatus" id="status">Нажми «Найти собеседника», чтобы начать</div><div class="messages" id="messages"><div class="empty">Здесь появятся сообщения</div></div>
+<form class="sendrow" id="sendform"><input class="input" id="message" maxlength="1000" placeholder="Напиши сообщение…" disabled autocomplete="off"><button class="btn secondary" id="send" disabled>Отправить</button></form></div>
+<div class="actions"><button class="btn danger" id="report" disabled>Пожаловаться и сменить</button></div>
+</div></section>
+<aside class="panel side"><h2>Как это работает</h2>
+<div class="feature"><span class="ico">🎭</span><div><b>Анонимно</b><br>Используй псевдоним, не сообщай личные данные.</div></div>
+<div class="feature"><span class="ico">🌍</span><div><b>Случайный собеседник</b><br>Сервер соединяет двух ожидающих пользователей.</div></div>
+<div class="feature"><span class="ico">⏭️</span><div><b>Следующий</b><br>Заверши диалог и найди нового собеседника.</div></div>
+<div class="feature"><span class="ico">🛡️</span><div><b>Безопасность</b><br>Можно пожаловаться и сразу перейти к поиску другого собеседника.</div></div>
+<div class="notice">Не отправляй незнакомцам пароли, адрес, документы, банковские данные или интимные материалы. Жалоба пока регистрируется только в журнале сервера.</div>
+</aside></div><footer class="footer">AnonChat · Ранняя версия · Не раскрывай личную информацию</footer></div>
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 <script>
-const $=id=>document.getElementById(id);let active=false;
-function add(text,own=false){const el=document.createElement('div');el.className='bubble'+(own?' me':'');el.textContent=text;$('messages').appendChild(el);$('messages').scrollTop=$('messages').scrollHeight}
-$('start').addEventListener('click',()=>{const nick=$('nickname').value.trim()||'Гость';$('nickname').value=nick;$('messages').innerHTML='';$('status').textContent='Демо-режим · локальный диалог';active=true;$('message').disabled=false;$('send').disabled=false;$('start').textContent='Начать заново';add('Привет, '+nick+'! Это демонстрация интерфейса AnonChat.');add('Пока сайт не подключён к серверу, сообщения видны только в этом браузере.');});
-$('sendform').addEventListener('submit',e=>{e.preventDefault();const value=$('message').value.trim();if(!active||!value)return;add(value,true);$('message').value='';});
-</script>
-</body></html>
+const SERVER_URL = "PASTE_RENDER_SERVER_URL_HERE";
+const $ = id => document.getElementById(id);
+let socket = null, matched = false;
+function status(text){$("status").textContent=text}
+function clearMessages(){ $("messages").innerHTML=""; }
+function addMessage(text, own=false){const el=document.createElement("div");el.className="bubble"+(own?" me":"");el.textContent=text;$("messages").appendChild(el);$("messages").scrollTop=$("messages").scrollHeight;}
+function controls(connected){$("message").disabled=!connected;$("send").disabled=!connected;$("next").disabled=!socket?.connected;$("report").disabled=!matched;}
+function connect(){
+ if(SERVER_URL.includes("PASTE_RENDER")){status("Сервер ещё не настроен. Сначала разверни папку server на Render.");return;}
+ if(socket?.connected){socket.emit("find");return;}
+ $("connection").textContent="Подключение…";
+ socket=io(SERVER_URL,{transports:["websocket","polling"],timeout:12000});
+ socket.on("connect",()=>{$("connection").textContent="Подключено";socket.emit("find");});
+ socket.on("connect_error",()=>{$("connection").textContent="Ошибка связи";status("Не удалось подключиться к серверу. Проверь адрес сервера.");});
+ socket.on("disconnect",()=>{$("connection").textContent="Нет связи";matched=false;controls(false);status("Соединение потеряно. Попробуй подключиться снова.");});
+ socket.on("searching",()=>{matched=false;controls(false);status("Ищем собеседника… Ожидай подключения.");clearMessages();});
+ socket.on("matched",()=>{matched=true;controls(true);status("Собеседник найден! Можно общаться.");addMessage("Вы подключены к новому собеседнику. Поздоровайся!");});
+ socket.on("chat_message",data=>{if(data&&typeof data.text==="string")addMessage(data.text);});
+ socket.on("partner_left",()=>{matched=false;controls(false);status("Собеседник покинул чат. Нажми «Найти собеседника».");addMessage("Собеседник отключился.");});
+ socket.on("rate_limited",()=>status("Слишком много сообщений. Подожди немного."));
+ socket.on("report_received",()=>status("Жалоба отправлена. Ищем другого собеседника…"));
+}
+$("start").addEventListener("click",()=>{if(!$("nickname").value.trim())$("nickname").value="Гость";connect();});
+$("next").addEventListener("click",()=>{if(socket?.connected){matched=false;controls(false);clearMessages();status("Ищем следующего собеседника…");socket.emit("next");}});
+$("report").addEventListener("click",()=>{if(socket?.connected&&matched){socket.emit("report","user_report");matched=false;controls(false);clearMessages();}});
+$("sendform").addEventListener("submit",e=>{e.preventDefault();const value=$("message").value.trim();if(!value||!matched||!socket?.connected)return;socket.emit("chat_message",value);addMessage(value,true);$("message").value="";});
+</script></body></html>
