@@ -495,10 +495,21 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
 .welcome-auth-message{min-height:18px;margin-top:9px;text-align:center;color:#d64f60;font-size:12px}
 .auth-welcome-card .welcome-note{text-align:center;color:#8992a5;font-size:11px}
 @media(max-width:540px){.auth-welcome-card .welcome-cta-area{padding:16px 18px 20px}.welcome-heading{padding:23px 18px 10px}.welcome-heading h1{font-size:19px}}
+</style><style id="anonchat-auth-portrait-style">
+.auth-welcome-card{overflow:hidden}
+.auth-portrait-banner{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:104px 104px;gap:0;overflow:hidden;background:linear-gradient(120deg,#e4eaff,#f9e5f4)}
+.auth-portrait-banner img{width:100%;height:104px;object-fit:cover;display:block}
+.auth-portrait-banner img:nth-child(2){object-position:35% 35%}
+.auth-portrait-banner img:nth-child(3){object-position:65% 35%}
+.auth-portrait-banner img:nth-child(4){object-position:50% 45%}
+.auth-banner-caption{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:max-content;max-width:90%;padding:9px 15px;border:1px solid #ffffffb8;border-radius:30px;background:#ffffffdf;color:#42317c;font-size:12px;font-weight:800;box-shadow:0 5px 22px #3c277a25;backdrop-filter:blur(8px)}
+.auth-banner-caption span{margin:0 5px}
+@media(max-width:540px){.auth-portrait-banner{grid-template-rows:78px 78px}.auth-portrait-banner img{height:78px}.auth-banner-caption{font-size:10px;padding:7px 10px}}
 </style></head>
 <body>
 <div id="welcomeScreen" class="welcome-screen hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
  <div class="welcome-card auth-welcome-card">
+  <div class="auth-portrait-banner" aria-label="Новые знакомства в AnonChat"><img src="assets/anonc-welcome-hero-1.webp" alt="Парень и девушка — новые знакомства"><img src="assets/anonc-welcome-hero-2.webp" alt=""><img src="assets/anonc-welcome-hero-3.webp" alt=""><img src="assets/anonc-welcome-hero-4.webp" alt=""><div class="auth-banner-caption"><span>💬</span> Новые знакомства начинаются здесь <span>💜</span></div></div>
   <div class="welcome-heading"><div class="welcome-mark">✦</div><h1 id="welcomeTitle">Добро пожаловать в AnonChat</h1><p>Знакомься, общайся и находи новых собеседников</p></div>
   <div class="welcome-cta-area">
    <div class="auth-tabs" role="tablist" aria-label="Авторизация">
