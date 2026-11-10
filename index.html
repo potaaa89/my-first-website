@@ -792,4 +792,16 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  }
 }
 </style>
+
+<style>
+/* DESKTOP: pin requested cards to the first row of their columns */
+@media screen and (min-width:1181px){
+ html body .workspace>.leftcol>#profileCard{grid-column:1!important;grid-row:1!important}
+ html body .workspace>.leftcol>#accountCard{grid-column:1!important;grid-row:2!important}
+ html body .workspace>.leftcol>#filtersCard{grid-column:1!important;grid-row:3!important}
+ html body .workspace>.leftcol>#publicProfileCard{grid-column:1!important;grid-row:4!important}
+ html body .workspace>.leftcol>#adminReportsCard{grid-column:3!important;grid-row:1!important}
+ html body .workspace>.leftcol>#friendsCard{grid-column:3!important;grid-row:2!important}
+}
+</style>
 </body></html>
