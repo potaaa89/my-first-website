@@ -129,51 +129,65 @@ html,body{background:radial-gradient(ellipse at 8% 0%,#e4ddff 0,transparent 36%)
 @media(max-width:760px){.emoji-picker{left:8px;bottom:62px}}
 
 \n.unread-count-badge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;margin-left:5px;border-radius:20px;background:#ec5277;color:#fff;font-size:10px;font-weight:800;vertical-align:middle}.historyitem .unread-count-badge{margin-left:auto;flex:0 0 auto}.mobile-tab{position:relative}.mobile-tab .unread-count-badge{position:absolute;top:3px;right:17%;margin:0}\n
-/* Desktop: exact three-column layout requested — mobile styles remain untouched */
+
+/* AnonChat desktop redesign matching the approved reference image.
+   All rules are desktop-only; mobile layout rules remain unchanged. */
 @media (min-width:1181px){
  .workspace{
-  display:grid!important;
-  width:100%!important;
-  max-width:1720px!important;
-  margin:0 auto!important;
-  padding:20px 22px!important;
+  display:grid!important;width:100%!important;max-width:1720px!important;
+  margin:0 auto!important;padding:20px 22px!important;
   grid-template-columns:minmax(300px,350px) minmax(560px,1fr) minmax(310px,370px)!important;
-  gap:18px!important;
-  align-items:start!important;
+  gap:18px!important;align-items:start!important;
  }
- /* Flatten the left wrapper so its cards can occupy the left and right rails */
  .workspace>.leftcol{display:contents!important}
  .workspace>.centercol{
-  display:flex!important;
-  flex-direction:column!important;
-  grid-column:2!important;
-  grid-row:1 / span 10!important;
-  width:100%!important;
-  min-width:0!important;
-  max-width:none!important;
-  gap:16px!important;
+  display:flex!important;flex-direction:column!important;grid-column:2!important;
+  grid-row:1 / span 10!important;width:100%!important;min-width:0!important;
+  max-width:none!important;gap:16px!important;
  }
- .workspace>#accountCard,
  .workspace>.leftcol>#accountCard{grid-column:1!important;grid-row:1!important}
  .workspace>.leftcol>#profileCard{grid-column:1!important;grid-row:2!important}
- .workspace>.leftcol>#publicProfileCard{grid-column:1!important;grid-row:3!important}
- .workspace>.leftcol>#filtersCard{grid-column:1!important;grid-row:4!important}
+ .workspace>.leftcol>#filtersCard{grid-column:1!important;grid-row:3!important}
+ .workspace>.leftcol>#publicProfileCard{grid-column:1!important;grid-row:4!important}
  .workspace>.leftcol>#friendsCard{grid-column:3!important;grid-row:1!important}
  .workspace>.leftcol>#adminReportsCard{grid-column:3!important;grid-row:2!important}
- .workspace>.leftcol>#accountCard,
- .workspace>.leftcol>#profileCard,
- .workspace>.leftcol>#publicProfileCard,
- .workspace>.leftcol>#filtersCard,
- .workspace>.leftcol>#friendsCard,
- .workspace>.leftcol>#adminReportsCard{
+ .workspace>.leftcol>#accountCard,.workspace>.leftcol>#profileCard,
+ .workspace>.leftcol>#filtersCard,.workspace>.leftcol>#publicProfileCard,
+ .workspace>.leftcol>#friendsCard,.workspace>.leftcol>#adminReportsCard{
   width:100%!important;min-width:0!important;max-width:none!important;
   margin:0 0 14px!important;align-self:start!important;
  }
  .workspace .centercol>.card{width:100%!important;min-width:0!important}
- .workspace .video-card{min-width:0!important}
- .workspace .chat-card{min-height:480px!important}
+ .workspace .video-card{border-radius:18px!important}
+ .workspace .videotop{padding:17px 20px!important}
+ .workspace .videotitle{font-size:18px!important}
+ .workspace .videostage{
+  display:flex!important;position:relative!important;gap:8px!important;
+  height:clamp(280px,34vw,430px)!important;min-height:280px!important;
+  max-height:430px!important;margin:14px 12px!important;padding:0!important;
+  background:transparent!important;overflow:hidden!important;border-radius:15px!important;
+ }
+ .workspace .videostage .videoCard,
+ .workspace .videostage .videoCard:first-child,
+ .workspace .videostage .videoCard:nth-child(2){
+  display:block!important;position:relative!important;inset:auto!important;
+  z-index:1!important;width:50%!important;height:100%!important;
+  min-width:0!important;aspect-ratio:auto!important;border:0!important;
+  border-radius:14px!important;box-shadow:none!important;flex:1 1 50%!important;
+ }
+ .workspace .videostage .videoCard video{width:100%!important;height:100%!important;object-fit:cover!important}
+ .workspace .stagebottom{padding:0 18px 18px!important}
+ .workspace .maincontrols .btn{min-width:145px!important;padding:12px 20px!important}
+ .workspace .callcontrols .btn{padding:10px 14px!important}
+ .workspace .chat-card{min-height:520px!important;max-height:calc(100vh - 125px)!important;border-radius:18px!important}
+ .workspace .messages{min-height:260px!important}
+ .workspace .chathead{padding:15px 18px!important;flex-wrap:wrap!important;gap:10px!important}
+ .workspace .sendtools{padding:12px 14px!important}
+ .workspace .cardhead{padding:16px 18px!important}
+ .workspace #discoveryUsers{gap:8px!important}
+ .workspace .discovery-user{grid-template-columns:46px minmax(0,1fr) auto!important;padding:10px!important}
+ .workspace .discovery-avatar{width:46px!important;height:46px!important}
 }
-
 </style>
 
 <style>
