@@ -1026,4 +1026,25 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
 .incoming-action small{font-size:13px;font-weight:700}
 @media(max-width:760px){.incoming-screen{padding:16px}.incoming-panel{min-height:390px;padding:30px 22px 26px;border-radius:26px}.incoming-avatar{width:104px;height:104px;margin:22px 0 15px}.incoming-caller{font-size:23px}.incoming-actions{gap:48px;margin-top:30px}.incoming-action span{width:64px;height:64px}}
 </style>
+<style id="anonchat-mobile-self-preview-position">
+@media screen and (max-width:760px){
+ #videostage:not(:fullscreen):not(.stage-fullscreen-fallback)>.videoCard:first-child{
+  position:absolute!important;
+  top:12px!important;
+  left:12px!important;
+  right:auto!important;
+  bottom:auto!important;
+  inset:12px auto auto 12px!important;
+  width:clamp(112px,30vw,170px)!important;
+  max-width:38vw!important;
+  height:auto!important;
+  aspect-ratio:16/10!important;
+  z-index:5!important;
+  border:2px solid #fff!important;
+  border-radius:12px!important;
+  overflow:hidden!important;
+  box-shadow:0 5px 22px #0005!important;
+ }
+}
+</style>
 </body></html>
