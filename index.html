@@ -516,7 +516,7 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
     </div>
     <div class="actions"><button class="btn primary" id="registerBtn" type="button">Регистрация</button><button class="btn secondary" id="loginBtn" type="button">Войти</button></div>
    </div>
-   <div class="actions"><button class="btn danger full" id="logoutBtn" type="button" style="display:none">Выйти из аккаунта</button><button class="btn danger full" id="guestLogoutBtn" type="button" style="display:none">Выйти из гостевого режима</button></div>
+   <div class="actions"><button class="btn danger full" id="logoutBtn" type="button" style="display:none">Выйти из аккаунта</button><button class="btn danger full" id="guestLogoutBtn" type="button" style="display:none" onclick="localStorage.removeItem('anonchat_guest_nickname_v1');localStorage.removeItem('anonchat_profile');window.location.assign('./')">Выйти из гостевого режима</button></div>
    <div class="authmessage" id="authMessage">Можно начать общение как гость или войти в аккаунт.</div>
    <div id="emailVerificationBox" class="hidden" style="margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:12px">
     <b>Подтверждение email</b>
