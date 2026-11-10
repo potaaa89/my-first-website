@@ -776,4 +776,20 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  html body .workspace .centercol>.card{width:100%!important;min-width:0!important}
 }
 </style>
+
+<style>
+/* DESKTOP: collapse empty grid rows when account/friends panels are hidden */
+@media screen and (min-width:1181px){
+ html body .workspace>.leftcol>#accountCard,
+ html body .workspace>.leftcol>#profileCard,
+ html body .workspace>.leftcol>#filtersCard,
+ html body .workspace>.leftcol>#publicProfileCard{
+  grid-column:1!important;grid-row:auto!important;
+ }
+ html body .workspace>.leftcol>#friendsCard,
+ html body .workspace>.leftcol>#adminReportsCard{
+  grid-column:3!important;grid-row:auto!important;
+ }
+}
+</style>
 </body></html>
