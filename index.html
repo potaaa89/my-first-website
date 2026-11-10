@@ -570,9 +570,25 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
 <section class="column centercol">
  <section class="card video-card">
   <div class="videotop"><div><div class="videotitle">Случайный видеочат</div><div class="small muted">Новые знакомства по всему миру</div></div><span class="tag" id="connection">Не подключено</span></div>
+  <div class="call-lobby" id="callLobby" aria-live="polite">
+   <div class="call-lobby-glow glow-one"></div><div class="call-lobby-glow glow-two"></div>
+   <div class="call-lobby-content">
+    <div class="call-lobby-badge" id="callLobbyBadge">ANONCHAT · НОВЫЕ ЗНАКОМСТВА</div>
+    <div class="call-lobby-avatar" id="callLobbyAvatar">✦</div>
+    <div class="call-lobby-visualizer" id="callLobbyVisualizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <h2 id="callLobbyTitle">Готов к новым знакомствам?</h2>
+    <p id="callLobbyText">Нажми «Начать поиск» — и мы подберём собеседника. Общайтесь в чате или переходите к звонку.</p>
+    <div class="call-lobby-tags" id="callLobbyTags"><span>💬 Общение</span><span>📹 Видеозвонки</span><span>💜 Новые знакомства</span></div>
+    <div class="call-lobby-audio-tools hidden" id="audioLobbyTools">
+     <button type="button" class="call-lobby-tool" id="audioLobbyMuteBtn">🎙 Микрофон включён</button>
+     <button type="button" class="call-lobby-tool" id="audioLobbySpeakerBtn">🔊 Звук включён</button>
+    </div>
+   </div>
+  </div>
+  <audio id="remoteAudio" autoplay></audio>
   <div class="videostage hidden" id="videostage">
    <div class="videoCard"><video id="localVideo" autoplay playsinline muted></video><div class="videoPlaceholder" id="localPlaceholder">Твоя камера выключена</div><div class="videoLabel">Вы</div></div>
-   <div class="videoCard"><video id="remoteVideo" autoplay playsinline></video><div class="videoPlaceholder" id="remotePlaceholder">✦<br>Собеседник появится здесь<br><span class="small">Нажми «Начать поиск»</span></div><div class="videoLabel">Собеседник</div></div>
+   <div class="videoCard"><video id="remoteVideo" autoplay playsinline></video><div class="videoPlaceholder" id="remotePlaceholder">✦<br>Собеседник появится здесь<br><span class="small">Ожидаем видеопоток…</span></div><div class="videoLabel">Собеседник</div></div>
   </div>
   <div id="incomingCall" class="incoming-screen" style="display:none" role="dialog" aria-modal="true" aria-labelledby="incomingText">
   <div class="incoming-panel">
@@ -705,6 +721,34 @@ function signalTyping(){if(!socket?.connected||!(directChatPeerId||matched))retu
 $("message").addEventListener("input",()=>{if($("message").value.trim())signalTyping();else stopLocalTyping()});
 async function openDirectChat(friend,kind="direct",persist=true){stopLocalTyping();showTypingIndicator(false);if(!authToken)return status("Войдите в аккаунт.");matched=false;if(socket){socket.disconnect();socket=null}resetCall();directChatPeerId=Number(friend.id);directChatKind=kind==="random"?"random":"direct";connect(false);if(persist&&window.anonchatUserId)localStorage.setItem("anonchat_last_chat_"+window.anonchatUserId,JSON.stringify({peerId:directChatPeerId,kind:directChatKind}));if(directChatKind==="direct")markPeerNotificationsRead("direct_message",directChatPeerId);partnerProfile=friend;$("chatPartnerName").textContent=friend.nickname||"Друг";updatePartnerPresence(friend);refreshPartnerAvatar();$("addFriendBtn").disabled=true;$("messages").innerHTML="";controls();try{if(directChatKind==="random"){await loadHistory(directChatPeerId)}else{const d=await authRequest("direct-messages/"+directChatPeerId,"GET");$("messages").innerHTML="";for(const m of d.messages||[])addDirectMessage(m,String(m.senderId)===String(window.anonchatUserId));if(!d.messages?.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="Начните личную переписку."; $("messages").append(empty)}}status((directChatKind==="random"?"История чата с ":"Личная переписка с ")+(friend.nickname||"другом"))}catch(e){status(e.message)}}
 
+function setCallLobbyView(view){
+ const lobby=$("callLobby"),stage=$("videostage"),title=$("callLobbyTitle"),copy=$("callLobbyText"),badge=$("callLobbyBadge"),tags=$("callLobbyTags"),tools=$("audioLobbyTools"),visual=$("callLobbyVisualizer");
+ stage.classList.add("hidden");lobby.classList.remove("hidden");
+ lobby.classList.remove("is-searching","is-audio","is-calling");
+ const states={
+  ready:["ANONCHAT · НОВЫЕ ЗНАКОМСТВА","Готов к новым знакомствам?","Нажми «Начать поиск» — и мы подберём собеседника. Общайтесь в чате или переходите к звонку.","✦"],
+  searching:["ПОДБИРАЕМ СОБЕСЕДНИКА","Ищем кого-то интересного…","Подбираем собеседника по твоим настройкам. Обычно это занимает совсем немного времени.","⌕"],
+  matched:["СОБЕСЕДНИК НАЙДЕН","Знакомство начинается!","Вы уже можете общаться в чате. Предложи видеозвонок или аудиозвонок, когда будете готовы.","♡"],
+  "calling-video":["ВИДЕОЗВОНОК","Ожидаем ответа…","Приглашение отправлено. Как только собеседник примет звонок, появится видео.","📹"],
+  "calling-audio":["АУДИОЗВОНОК","Ожидаем ответа…","Приглашение отправлено. После ответа здесь появится собеседник и визуализация звука.","🎧"],
+  audio:["АУДИОЗВОНОК · В СЕТИ","Вы на связи!","Общайтесь голосом. Микрофон и звук можно включать и выключать здесь.","🎧"],
+  error:["СВЯЗЬ С СЕРВЕРОМ","Пока не удалось подключиться","Проверь соединение с интернетом и нажми «Начать поиск» ещё раз.","⌁"]
+ };
+ const cfg=states[view]||states.ready;
+ badge.textContent=cfg[0];title.textContent=cfg[1];copy.textContent=cfg[2];
+ const withPartner=["matched","calling-video","calling-audio","audio"].includes(view);
+ setAvatarImage($("callLobbyAvatar"),withPartner?partnerProfile?.avatar:"",withPartner?initials(partnerProfile?.nickname):cfg[3]);
+ lobby.classList.toggle("is-searching",view==="searching");
+ lobby.classList.toggle("is-audio",view==="audio"||view==="calling-audio");
+ lobby.classList.toggle("is-calling",view==="calling-video"||view==="calling-audio");
+ tags.classList.toggle("hidden",view==="audio"||view==="calling-audio");
+ visual.style.display=(view==="audio"||view==="calling-audio")?"flex":"none";
+ tools.classList.toggle("hidden",view!=="audio");
+ const mute=$("audioLobbyMuteBtn"),speaker=$("audioLobbySpeakerBtn");
+ if(mute){const track=localStream?.getAudioTracks?.()[0];mute.textContent=track&&!track.enabled?"🔇 Микрофон выключен":"🎙 Микрофон включён";mute.setAttribute("aria-pressed",String(!!track&&!track.enabled))}
+ if(speaker){speaker.textContent=$("remoteAudio").muted?"🔈 Звук выключен":"🔊 Звук включён";speaker.setAttribute("aria-pressed",String($("remoteAudio").muted))}
+}
+function showVideoCallStage(){$("callLobby").classList.add("hidden");$("videostage").classList.remove("hidden")}
 function controls(){$("voiceBtn").disabled=!directChatPeerId||!authToken; $("next").disabled=!socket?.connected;const canCall=(matched||!!directChatPeerId)&&!!authToken&&callStatus==="idle";$("videoCall").disabled=!matched||callStatus!=="idle";$("audioCall").disabled=!matched||callStatus!=="idle";$("chatVideoCall").disabled=!canCall;$("chatAudioCall").disabled=!canCall;$("clearChatBtn").disabled=!authToken||!(directChatPeerId||(matched&&partnerProfile?.id));$("endCall").disabled=callStatus==="idle";$("message").disabled=!(matched||directChatPeerId);$("send").disabled=!(matched||directChatPeerId);$("report").disabled=!matched;$("addFriendBtn").disabled=!authToken||!matched||!partnerProfile.id;$("openPrivateChatBtn").disabled=!authToken||!matched||!partnerProfile.id}
 async function startVoiceRecording(){
 if(!directChatPeerId||!authToken)return status("Голосовые сообщения доступны в личной переписке.");
@@ -720,10 +764,10 @@ voiceRecorder.start();$("voiceBtn").textContent="■";$("voiceBtn").title="Ос�
 setTimeout(()=>{if(voiceRecorder?.state==="recording"){voiceRecorder.stop();status("Достигнут лимит записи — отправляем аудио.")}},90000);
 }catch(e){voiceStream?.getTracks().forEach(t=>t.stop());voiceStream=null;status(e.name==="NotAllowedError"?"Разрешите доступ к микрофону в браузере.":e.message||"Не удалось включить микрофон.")}}
 function toggleVoiceRecording(){if(voiceRecorder?.state==="recording")voiceRecorder.stop();else startVoiceRecording()}
-function closePeer(){if(peer){peer.close();peer=null}pendingCandidates=[];$("remoteVideo").srcObject=null;$("remotePlaceholder").style.display="grid"}
+function closePeer(){if(peer){peer.close();peer=null}pendingCandidates=[];$("remoteVideo").srcObject=null;$("remoteAudio").srcObject=null;$("remoteAudio").muted=false;$("remotePlaceholder").style.display="grid"}
 function stopMedia(){closePeer();if(localStream){localStream.getTracks().forEach(t=>t.stop());localStream=null}$("localVideo").srcObject=null;$("localPlaceholder").style.display="grid"}
 async function getMedia(mode){if(!navigator.mediaDevices?.getUserMedia)throw new Error("Для звонка нужен HTTPS и современный браузер.");localStream=await navigator.mediaDevices.getUserMedia({video:mode==="video"?{width:{ideal:640},height:{ideal:480}}:false,audio:true});if(mode==="video"){$("localVideo").srcObject=localStream;$("localPlaceholder").style.display="none"}else{$("localPlaceholder").textContent="Аудиозвонок · камера выключена";$("localPlaceholder").style.display="grid"}}
-function createPeer(){closePeer();peer=new RTCPeerConnection(rtcConfig);localStream.getTracks().forEach(t=>peer.addTrack(t,localStream));peer.ontrack=e=>{$("remoteVideo").srcObject=e.streams[0];$("remotePlaceholder").style.display="none"};peer.onicecandidate=e=>{if(e.candidate)socket.emit("webrtc_ice",e.candidate)};peer.onconnectionstatechange=()=>{if(peer?.connectionState==="connected")status(callMode==="audio"?"Аудиозвонок установлен.":"Видеозвонок установлен.")};return peer}
+function createPeer(){closePeer();peer=new RTCPeerConnection(rtcConfig);localStream.getTracks().forEach(t=>peer.addTrack(t,localStream));peer.ontrack=e=>{const stream=e.streams?.[0]||new MediaStream([e.track]);if(callMode==="audio"){$("remoteAudio").srcObject=stream;$("remoteAudio").play?.().catch(()=>{});setCallLobbyView("audio")}else{$("remoteVideo").srcObject=stream;$("remotePlaceholder").style.display="none"}};peer.onicecandidate=e=>{if(e.candidate)socket.emit("webrtc_ice",e.candidate)};peer.onconnectionstatechange=()=>{if(peer?.connectionState==="connected")status(callMode==="audio"?"Аудиозвонок установлен.":"Видеозвонок установлен.")};return peer}
 async function flushIce(){if(peer?.remoteDescription){for(const c of pendingCandidates){try{await peer.addIceCandidate(c)}catch(e){}}pendingCandidates=[]}}
 async function offer(){const p=createPeer(),o=await p.createOffer();await p.setLocalDescription(o);socket.emit("webrtc_offer",p.localDescription)}
 let ringAudioContext=null,ringTimer=null,ringUnlocked=false;
@@ -733,19 +777,21 @@ document.addEventListener("keydown",unlockRingAudio);
 function playRingBurst(){if(!ringAudioContext||ringAudioContext.state!=="running")return;try{const ctx=ringAudioContext,now=ctx.currentTime,gain=ctx.createGain();gain.connect(ctx.destination);gain.gain.setValueAtTime(0.0001,now);gain.gain.exponentialRampToValueAtTime(0.16,now+0.035);gain.gain.setValueAtTime(0.16,now+0.42);gain.gain.exponentialRampToValueAtTime(0.0001,now+0.58);for(const freq of [440,554]){const osc=ctx.createOscillator();osc.type="sine";osc.frequency.value=freq;osc.connect(gain);osc.start(now);osc.stop(now+0.6)}}catch(e){}}
 function startRingtone(){stopRingtone();unlockRingAudio();if(!ringAudioContext||ringAudioContext.state!=="running")return;playRingBurst();ringTimer=setInterval(()=>{if($("incomingCall").style.display==="none"){stopRingtone();return}playRingBurst()},1800)}
 function stopRingtone(){if(ringTimer){clearInterval(ringTimer);ringTimer=null}}
-function resetCall(t){stopRingtone();callStatus="idle";callMode=null;incomingMode=null;$("incomingCall").style.display="none";$("videostage").classList.add("hidden");$("localPlaceholder").textContent="Твоя камера выключена";stopMedia();controls();if(t)status(t)}
-function connect(search=true){if(socket?.connected){if(search)socket.emit("find",{profile:profileData(),filters:searchData()});return}if(socket){socket.disconnect();socket=null}$("connection").textContent="Подключение…";socket=io(SERVER_URL,{transports:["websocket","polling"],timeout:20000,auth:authToken?{token:authToken}:{}});socket.on("connect",()=>{$("connection").textContent="Подключено";if(search)socket.emit("find",{profile:profileData(),filters:searchData()});if(authToken){loadFriends();loadConversations();loadDiscovery()}});socket.on("typing",d=>{const relevant=directChatPeerId?Number(d?.peerId)===Number(directChatPeerId):matched&&d?.peerId==null;if(!relevant)return;clearTimeout(remoteTypingTimer);showTypingIndicator(!!d.typing);if(d.typing)remoteTypingTimer=setTimeout(()=>showTypingIndicator(false),3000)});socket.on("presence_update",d=>{loadFriends();if(Number(partnerProfile?.id)===Number(d.userId))updatePartnerPresence({online:!!d.online,lastSeen:d.lastSeen})});socket.on("connect_error",()=>status("Не удалось подключиться к серверу."));socket.on("disconnect",()=>{matched=false;resetCall("Связь с сервером потеряна.");$("connection").textContent="Нет связи"});socket.on("searching",()=>{matched=false;resetCall("Ищем собеседника…")});socket.on("matched",d=>{showTypingIndicator(false);matched=true;partnerProfile=d?.partner||{nickname:"Собеседник"};directChatPeerId=null;if(partnerProfile.id&&authToken)loadHistory(partnerProfile.id);$("chatPartnerName").textContent=partnerProfile.nickname||"Собеседник";refreshPartnerAvatar();callStatus="idle";$("messages").innerHTML="";controls();status("Собеседник найден! Общайтесь в чате. Для звонка отправьте приглашение.");addMessage("Звонок начнётся только после согласия собеседника.")});
+function resetCall(t){stopRingtone();callStatus="idle";callMode=null;incomingMode=null;$("incomingCall").style.display="none";$("videostage").classList.add("hidden");$("localPlaceholder").textContent="Твоя камера выключена";stopMedia();setCallLobbyView(matched||directChatPeerId?"matched":"ready");controls();if(t)status(t)}
+function connect(search=true){if(socket?.connected){if(search)socket.emit("find",{profile:profileData(),filters:searchData()});return}if(socket){socket.disconnect();socket=null}$("connection").textContent="Подключение…";socket=io(SERVER_URL,{transports:["websocket","polling"],timeout:20000,auth:authToken?{token:authToken}:{}});socket.on("connect",()=>{$("connection").textContent="Подключено";if(search)socket.emit("find",{profile:profileData(),filters:searchData()});if(authToken){loadFriends();loadConversations();loadDiscovery()}});socket.on("typing",d=>{const relevant=directChatPeerId?Number(d?.peerId)===Number(directChatPeerId):matched&&d?.peerId==null;if(!relevant)return;clearTimeout(remoteTypingTimer);showTypingIndicator(!!d.typing);if(d.typing)remoteTypingTimer=setTimeout(()=>showTypingIndicator(false),3000)});socket.on("presence_update",d=>{loadFriends();if(Number(partnerProfile?.id)===Number(d.userId))updatePartnerPresence({online:!!d.online,lastSeen:d.lastSeen})});socket.on("connect_error",()=>{setCallLobbyView("error");status("Не удалось подключиться к серверу.")});socket.on("disconnect",()=>{matched=false;resetCall("Связь с сервером потеряна.");setCallLobbyView("error");$("connection").textContent="Нет связи"});socket.on("searching",()=>{matched=false;resetCall("Ищем собеседника…");setCallLobbyView("searching")});socket.on("matched",d=>{showTypingIndicator(false);matched=true;partnerProfile=d?.partner||{nickname:"Собеседник"};directChatPeerId=null;if(partnerProfile.id&&authToken)loadHistory(partnerProfile.id);$("chatPartnerName").textContent=partnerProfile.nickname||"Собеседник";refreshPartnerAvatar();callStatus="idle";setCallLobbyView("matched");$("messages").innerHTML="";controls();status("Собеседник найден! Общайтесь в чате. Для звонка отправьте приглашение.");addMessage("Звонок начнётся только после согласия собеседника.")});
 socket.on("call_incoming",d=>{incomingMode=d?.mode==="audio"?"audio":"video";$("incomingText").textContent=incomingMode==="video"?"Вам поступает видеозвонок. Принять?":"Вам поступает аудиозвонок. Принять?";$("incomingCallerName").textContent=partnerProfile?.nickname||"Собеседник";setAvatarImage($("incomingAvatar"),partnerProfile?.avatar,initials(partnerProfile?.nickname));$("incomingCall").style.display="flex";startRingtone();status("Входящий звонок — ожидаем ответа.")});
-socket.on("call_accepted",async()=>{try{await getMedia(callMode);callStatus="active";if(callMode==="video")$("videostage").classList.remove("hidden");controls();status("Собеседник принял звонок. Подключаемся…");await offer()}catch(e){socket.emit("call_end");resetCall(e.message)}});
+socket.on("call_accepted",async()=>{try{await getMedia(callMode);callStatus="active";if(callMode==="video")showVideoCallStage();else setCallLobbyView("audio");controls();status("Собеседник принял звонок. Подключаемся…");await offer()}catch(e){socket.emit("call_end");resetCall(e.message)}});
 socket.on("call_rejected",()=>resetCall("Собеседник отклонил звонок. Чат продолжается."));socket.on("call_cancelled",()=>resetCall("Звонок отменён."));socket.on("call_ended",()=>resetCall("Собеседник завершил звонок. Чат продолжается."));
 socket.on("webrtc_offer",async o=>{try{const p=createPeer();await p.setRemoteDescription(o);await flushIce();const ans=await p.createAnswer();await p.setLocalDescription(ans);socket.emit("webrtc_answer",p.localDescription)}catch(e){resetCall("Не удалось подключить звонок.")}});
 socket.on("webrtc_answer",async a=>{if(peer){await peer.setRemoteDescription(a);await flushIce()}});socket.on("webrtc_ice",async c=>{if(peer?.remoteDescription)await peer.addIceCandidate(c);else pendingCandidates.push(c)});
 socket.on("private_message",d=>{playNotificationSound();if(d&&Number(d.peerId)===Number(directChatPeerId)){addDirectMessage(d,false);authRequest("direct-messages/"+d.peerId,"GET").catch(()=>{});markPeerNotificationsRead("direct_message",d.peerId)}else if("Notification"in window&&Notification.permission==="granted"&&document.hidden)new Notification("Новое сообщение",{body:d?.content||"Вам пришло личное сообщение."});loadFriends();refreshNotifications()});socket.on("private_message_edited",d=>{if(Number(d?.peerId)===Number(directChatPeerId)){const item=$("messages").querySelector(`[data-message-id="${d.id}"]`);const textNode=item?.querySelector(".direct-text");if(textNode)textNode.textContent=d.content+" (изменено)";}});socket.on("private_message_deleted",d=>{if(Number(d?.peerId)===Number(directChatPeerId)){$("messages").querySelector(`[data-message-id="${d.id}"]`)?.remove();}});socket.on("private_message_status",d=>{if(Number(d?.peerId)===Number(directChatPeerId))updateMessageReceipts(d.messageIds,d.read===true)});socket.on("friend_request",d=>{playNotificationSound();loadFriendRequests();refreshNotifications();status("У вас новая заявка в друзья.");if("Notification"in window&&Notification.permission==="granted"&&document.hidden)new Notification("Новая заявка в друзья",{body:d?.from?.nickname||"Кто-то хочет добавить вас в друзья."})});socket.on("friend_request_update",()=>{loadFriends();status("Заявка в друзья обработана.")});socket.on("chat_message",d=>{playNotificationSound();if(d?.text)addMessage(d.text)});socket.on("chat_image",d=>{playNotificationSound();if(d?.data)addImageMessage(d.data,false)});socket.on("image_rejected",d=>status(d?.error||"Не удалось отправить фото."));socket.on("history_save_error",()=>status("Сообщение отправлено, но не удалось сохранить историю."));socket.on("partner_left",()=>{showTypingIndicator(false);matched=false;resetCall("Собеседник покинул чат.");addMessage("Собеседник отключился.")});socket.on("rate_limited",()=>status("Слишком много сообщений."));socket.on("report_received",d=>status(d?.saved===false?"Для сохранения жалобы оба пользователя должны войти в аккаунт.":"Жалоба сохранена. Спасибо за сообщение."))}
-$("friendsRefresh").onclick=()=>{loadFriends();loadFriendRequests();refreshNotifications()};$("adminReportsRefresh")?.addEventListener("click",loadAdminReports);setInterval(()=>{if(authToken)refreshNotifications()},30000);$("addFriendBtn").onclick=requestFriend;$("openPrivateChatBtn").onclick=()=>{if(!authToken||!partnerProfile?.id)return status("Войдите в аккаунт, чтобы начать личную переписку.");openDirectChat(partnerProfile)};$("start").onclick=()=>{stopLocalTyping();showTypingIndicator(false);directChatPeerId=null;connect()};
-$("next").onclick=()=>{stopLocalTyping();showTypingIndicator(false);if(socket?.connected){matched=false;resetCall("Ищем следующего собеседника…");$("messages").innerHTML="";socket.emit("next",{profile:profileData(),filters:searchData()});controls()}};
-$("videoCall").onclick=$("chatVideoCall").onclick=()=>{if((matched||directChatPeerId)&&callStatus==="idle"){callMode="video";callStatus="calling";controls();status("Отправлено приглашение на видеозвонок…");socket.emit("call_request",directChatPeerId?{mode:"video",peerId:directChatPeerId}:"video")}};
-$("audioCall").onclick=$("chatAudioCall").onclick=()=>{if((matched||directChatPeerId)&&callStatus==="idle"){callMode="audio";callStatus="calling";controls();status("Отправлено приглашение на аудиозвонок…");socket.emit("call_request",directChatPeerId?{mode:"audio",peerId:directChatPeerId}:"audio")}};
-$("acceptCall").onclick=async()=>{try{$("incomingCall").style.display="none";callMode=incomingMode;await getMedia(callMode);callStatus="active";if(callMode==="video")$("videostage").classList.remove("hidden");socket.emit("call_accept");controls();status("Звонок принят. Подключаемся…")}catch(e){socket.emit("call_reject");resetCall(e.name==="NotAllowedError"?"Разреши доступ к камере/микрофону.":e.message)}};
+$("audioLobbyMuteBtn").onclick=()=>{const track=localStream?.getAudioTracks?.()[0];if(!track)return;track.enabled=!track.enabled;setCallLobbyView("audio")};
+$("audioLobbySpeakerBtn").onclick=()=>{$("remoteAudio").muted=!$("remoteAudio").muted;setCallLobbyView("audio")};
+$("friendsRefresh").onclick=()=>{loadFriends();loadFriendRequests();refreshNotifications()};$("adminReportsRefresh")?.addEventListener("click",loadAdminReports);setInterval(()=>{if(authToken)refreshNotifications()},30000);$("addFriendBtn").onclick=requestFriend;$("openPrivateChatBtn").onclick=()=>{if(!authToken||!partnerProfile?.id)return status("Войдите в аккаунт, чтобы начать личную переписку.");openDirectChat(partnerProfile)};$("start").onclick=()=>{stopLocalTyping();showTypingIndicator(false);directChatPeerId=null;setCallLobbyView("searching");status("Ищем собеседника…");connect()};
+$("next").onclick=()=>{stopLocalTyping();showTypingIndicator(false);if(socket?.connected){matched=false;resetCall("Ищем следующего собеседника…");setCallLobbyView("searching");$("messages").innerHTML="";socket.emit("next",{profile:profileData(),filters:searchData()});controls()}};
+$("videoCall").onclick=$("chatVideoCall").onclick=()=>{if((matched||directChatPeerId)&&callStatus==="idle"){callMode="video";callStatus="calling";setCallLobbyView("calling-video");controls();status("Отправлено приглашение на видеозвонок…");socket.emit("call_request",directChatPeerId?{mode:"video",peerId:directChatPeerId}:"video")}};
+$("audioCall").onclick=$("chatAudioCall").onclick=()=>{if((matched||directChatPeerId)&&callStatus==="idle"){callMode="audio";callStatus="calling";setCallLobbyView("calling-audio");controls();status("Отправлено приглашение на аудиозвонок…");socket.emit("call_request",directChatPeerId?{mode:"audio",peerId:directChatPeerId}:"audio")}};
+$("acceptCall").onclick=async()=>{try{$("incomingCall").style.display="none";callMode=incomingMode;await getMedia(callMode);callStatus="active";if(callMode==="video")showVideoCallStage();else setCallLobbyView("audio");socket.emit("call_accept");controls();status("Звонок принят. Подключаемся…")}catch(e){socket.emit("call_reject");resetCall(e.name==="NotAllowedError"?"Разреши доступ к камере/микрофону.":e.message)}};
 $("rejectCall").onclick=()=>{socket?.emit("call_reject");resetCall("Звонок отклонён. Чат продолжается.")};
 $("endCall").onclick=()=>{socket?.emit("call_end");resetCall("Звонок завершён. Чат продолжается.")};
 $("report").onclick=()=>{if(socket?.connected&&matched){const reason=prompt("Причина жалобы:\nspam — спам\nharassment — оскорбления\ninappropriate — неприемлемый контент\nunderage — несовершеннолетний\nother — другое","other");if(reason===null)return;const details=prompt("Дополнительные сведения (необязательно):","")||"";socket.emit("report",{reason:reason.trim().slice(0,60)||"other",details});matched=false;resetCall("Жалоба отправлена. Спасибо за сообщение.");$("messages").innerHTML="";controls()}};
@@ -1257,4 +1303,50 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!overlay.classList.contains("hidden"))close()});
 })();
 </script>
+<style id="anonchat-call-lobby-style">
+/* Friendly call lobby replaces empty video tiles until a video connection is actually active. */
+#videostage.hidden{display:none!important}
+.call-lobby{position:relative;isolation:isolate;display:grid;place-items:center;min-height:clamp(270px,31vw,390px);margin:16px 16px 14px;padding:28px 18px;overflow:hidden;border:1px solid #d9dfff;border-radius:16px;background:radial-gradient(ellipse at 50% 0%,#354b92 0%,#1a2858 42%,#101a38 100%);box-shadow:inset 0 0 55px #7990ff18,0 8px 24px #1a2a5b14;color:#fff}
+.call-lobby.hidden{display:none!important}
+.call-lobby::before,.call-lobby::after{content:"";position:absolute;z-index:-1;pointer-events:none;border:1px solid #91a6ff2b;border-radius:50%;width:330px;height:330px}
+.call-lobby::before{left:-160px;top:-190px;box-shadow:0 0 0 28px #8a6fff0b,0 0 0 60px #8a6fff08}
+.call-lobby::after{right:-180px;bottom:-230px;width:430px;height:430px;box-shadow:0 0 0 32px #ff6cc50a,0 0 0 68px #ff6cc507}
+.call-lobby-glow{position:absolute;z-index:-1;width:190px;height:190px;border-radius:50%;filter:blur(55px);opacity:.34;pointer-events:none}
+.call-lobby .glow-one{background:#416cff;left:12%;bottom:0}
+.call-lobby .glow-two{background:#d13dcb;right:12%;top:0}
+.call-lobby-content{display:flex;flex-direction:column;align-items:center;text-align:center;width:min(100%,560px)}
+.call-lobby-badge{padding:6px 11px;border:1px solid #ffffff2c;border-radius:30px;background:#ffffff0c;color:#c4d0ff;font-size:10px;font-weight:850;letter-spacing:1.5px}
+.call-lobby-avatar{display:grid;place-items:center;width:76px;height:76px;margin:14px 0 8px;border:1px solid #ffffff70;border-radius:24px;background:linear-gradient(145deg,#6388ff,#914be9);box-shadow:0 10px 30px #536bff55;color:#fff;font-size:31px;font-weight:850;overflow:hidden}
+.call-lobby-avatar.has-photo{border-radius:50%;width:82px;height:82px}
+.call-lobby-avatar img{width:100%;height:100%;object-fit:cover}
+.call-lobby h2{margin:5px 0 7px;color:#fff;font-size:clamp(21px,2.4vw,28px);line-height:1.2;letter-spacing:-.5px}
+.call-lobby p{max-width:470px;margin:0 auto;color:#c3cdef;font-size:13px;line-height:1.55}
+.call-lobby-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:17px}
+.call-lobby-tags span{padding:7px 10px;border:1px solid #ffffff25;border-radius:30px;background:#ffffff0c;color:#e4eaff;font-size:11px}
+.call-lobby-visualizer{display:none;align-items:center;justify-content:center;gap:5px;height:30px;margin:0 0 6px}
+.call-lobby-visualizer i{display:block;width:4px;height:8px;border-radius:5px;background:linear-gradient(#ff8add,#7ca4ff);opacity:.9}
+.call-lobby.is-audio .call-lobby-visualizer{display:flex}
+.call-lobby.is-audio .call-lobby-avatar{border-radius:50%;box-shadow:0 0 0 8px #a36bff1e,0 0 38px #9f60ff80}
+.call-lobby.is-audio .call-lobby-visualizer i{animation:audioBars .8s ease-in-out infinite alternate}
+.call-lobby.is-audio .call-lobby-visualizer i:nth-child(2n){animation-delay:.16s}
+.call-lobby.is-audio .call-lobby-visualizer i:nth-child(3n){animation-delay:.31s}
+@keyframes audioBars{from{height:5px}to{height:28px}}
+.call-lobby.is-searching .call-lobby-avatar{animation:lobbyPulse 1.35s ease-in-out infinite}
+.call-lobby.is-searching .call-lobby-avatar::after{content:""}
+@keyframes lobbyPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 #8e7cff22,0 10px 30px #536bff55}50%{transform:scale(1.06);box-shadow:0 0 0 13px #8e7cff16,0 10px 35px #536bff88}}
+.call-lobby-audio-tools{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px}
+.call-lobby-tool{border:1px solid #ffffff40;border-radius:10px;padding:9px 12px;background:#ffffff14;color:#fff;font-size:11px;font-weight:750;cursor:pointer}
+.call-lobby-tool:hover{background:#ffffff25}
+.call-lobby-tool[aria-pressed="true"]{background:#e64d70;border-color:#ff9db2}
+@media(max-width:760px){
+ .call-lobby{min-height:260px;margin:10px;padding:24px 14px;border-radius:13px}
+ .call-lobby-avatar{width:65px;height:65px;margin:11px 0 7px;border-radius:20px;font-size:27px}
+ .call-lobby-avatar.has-photo{width:72px;height:72px;border-radius:50%}
+ .call-lobby h2{font-size:21px}
+ .call-lobby p{font-size:12px}
+ .call-lobby-tags{gap:6px;margin-top:13px}
+ .call-lobby-tags span{font-size:10px;padding:6px 8px}
+}
+@media(prefers-reduced-motion:reduce){.call-lobby.is-searching .call-lobby-avatar,.call-lobby.is-audio .call-lobby-visualizer i{animation:none!important}}
+</style>
 </body></html>
