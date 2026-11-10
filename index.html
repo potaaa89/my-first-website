@@ -477,22 +477,53 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
 @media(max-width:760px){.swing-card{padding:25px 18px 19px;border-radius:22px}.swing-card h2{font-size:23px}.swing-emoji{font-size:58px}.swing-buttons{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){.swing-emoji{animation:none}}
 </style>
-</head>
+<style id="anonchat-auth-tabs-style">
+.auth-welcome-card{width:min(100%,480px);border:1px solid #e4e9f5;background:#fff;box-shadow:0 24px 80px #11183e55;text-align:left}
+.welcome-heading{padding:28px 28px 12px;text-align:center;color:#20283a}.welcome-mark{margin:auto;width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#5591ff,#4265d8);color:white;display:grid;place-items:center;font-size:24px}.welcome-heading h1{font-size:22px;margin:12px 0 4px}.welcome-heading p{margin:0;color:#8992a5;font-size:13px}
+.auth-welcome-card .welcome-cta-area{padding:18px 28px 24px;background:#fff}
+.auth-tabs{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #e2e6ee;border-radius:9px;overflow:hidden;margin-bottom:22px}
+.auth-tab{border:0;background:#fff;padding:11px 5px;color:#526078;cursor:pointer;font-weight:650}
+.auth-tab+ .auth-tab{border-left:1px solid #e2e6ee}.auth-tab.active{background:#e9e9e9;color:#20283a}
+.auth-panel{display:flex;flex-direction:column;gap:10px}.auth-panel.hidden{display:none!important}
+.auth-caption{text-align:center;font-weight:700;margin:0 0 2px}
+.auth-genders{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:2px 0 4px}
+.gender-choice{border:0;border-radius:24px;background:#e7e7e7;color:#303744;padding:11px 8px;font-weight:700;cursor:pointer}
+.gender-choice.active{background:#d2e8ff;outline:2px solid #7daeff}
+.auth-consent{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:1.45;color:#303744}.auth-consent input{margin-top:3px;flex:0 0 auto}.auth-consent a{color:#315fc9}
+.auth-label{font-weight:700;font-size:12px;margin-top:3px}.auth-input{width:100%;height:43px;border:1px solid #dfe4ec;border-radius:9px;padding:9px 11px;font:inherit;outline:none}.auth-input:focus{border-color:#8eafff;box-shadow:0 0 0 3px #4778e814}
+.auth-submit{display:block;min-width:150px;align-self:center;margin:7px auto 0;border:0;border-radius:13px;padding:12px 25px;background:#20b47b;color:#fff;font-size:15px;font-weight:750;cursor:pointer}.auth-submit:hover{background:#169d69}
+.welcome-auth-message{min-height:18px;margin-top:9px;text-align:center;color:#d64f60;font-size:12px}
+.auth-welcome-card .welcome-note{text-align:center;color:#8992a5;font-size:11px}
+@media(max-width:540px){.auth-welcome-card .welcome-cta-area{padding:16px 18px 20px}.welcome-heading{padding:23px 18px 10px}.welcome-heading h1{font-size:19px}}
+</style></head>
 <body>
 <div id="welcomeScreen" class="welcome-screen hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
- <div class="welcome-card">
-  <div class="welcome-hero-stack" role="img" aria-label="AnonChat — новые знакомства, общение и видеозвонки">
-   <img class="welcome-hero-strip" src="assets/anonc-welcome-hero-1.webp" alt="">
-   <img class="welcome-hero-strip" src="assets/anonc-welcome-hero-2.webp" alt="">
-   <img class="welcome-hero-strip" src="assets/anonc-welcome-hero-3.webp" alt="">
-   <img class="welcome-hero-strip" src="assets/anonc-welcome-hero-4.webp" alt="">
-  </div>
+ <div class="welcome-card auth-welcome-card">
+  <div class="welcome-heading"><div class="welcome-mark">✦</div><h1 id="welcomeTitle">Добро пожаловать в AnonChat</h1><p>Знакомься, общайся и находи новых собеседников</p></div>
   <div class="welcome-cta-area">
-   <div class="welcome-actions">
-    <button type="button" class="btn primary" id="welcomeRegister">Создать аккаунт</button>
-    <button type="button" class="btn secondary" id="welcomeGuest">Продолжить как гость</button>
+   <div class="auth-tabs" role="tablist" aria-label="Авторизация">
+    <button type="button" class="auth-tab active" data-auth-tab="guest">Гость</button>
+    <button type="button" class="auth-tab" data-auth-tab="login">Войти</button>
+    <button type="button" class="auth-tab" data-auth-tab="register">Регистрация</button>
    </div>
-   <button type="button" class="welcome-login" id="welcomeLogin">Уже есть аккаунт? <b>Войти</b></button>
+   <section class="auth-panel" data-auth-panel="guest">
+    <div class="auth-caption">Я:</div>
+    <div class="auth-genders"><button type="button" class="gender-choice active" data-gender="male">♟ Мужчина</button><button type="button" class="gender-choice" data-gender="female">♟ Женщина</button></div>
+    <label class="auth-consent"><input type="checkbox" id="welcomeAdultConsent"> <span>Продолжая, вы подтверждаете, что согласны с <a href="terms.html" target="_blank" rel="noopener">Пользовательским соглашением</a> и вам исполнилось 18 лет</span></label>
+    <button type="button" class="auth-submit" id="welcomeGuest">Войти как гость</button>
+   </section>
+   <section class="auth-panel hidden" data-auth-panel="login">
+    <label class="auth-label" for="welcomeLoginEmail">Email</label><input class="auth-input" id="welcomeLoginEmail" type="email" autocomplete="email">
+    <label class="auth-label" for="welcomeLoginPassword">Пароль</label><input class="auth-input" id="welcomeLoginPassword" type="password" autocomplete="current-password">
+    <button type="button" class="auth-submit" id="welcomeLoginSubmit">Войти</button>
+   </section>
+   <section class="auth-panel hidden" data-auth-panel="register">
+    <label class="auth-label" for="welcomeRegisterEmail">Email</label><input class="auth-input" id="welcomeRegisterEmail" type="email" autocomplete="email">
+    <label class="auth-label" for="welcomeRegisterPassword">Пароль (не менее 8 символов)</label><input class="auth-input" id="welcomeRegisterPassword" type="password" minlength="8" autocomplete="new-password">
+    <div class="auth-caption">Я:</div><div class="auth-genders"><button type="button" class="gender-choice active" data-register-gender="male">♟ Мужчина</button><button type="button" class="gender-choice" data-register-gender="female">♟ Женщина</button></div>
+    <button type="button" class="auth-submit" id="welcomeRegisterSubmit">Создать аккаунт</button>
+   </section>
+   <div class="welcome-auth-message" id="welcomeAuthMessage"></div>
    <div class="welcome-note">Регистрация необязательна — можно начать общение без аккаунта.</div>
   </div>
  </div>
@@ -1266,16 +1297,37 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
 })();
 </script><script id="anonchat-welcome-init">
 (function(){
- const screen=document.getElementById("welcomeScreen");
- if(!screen)return;
+ const screen=document.getElementById("welcomeScreen");if(!screen)return;
  const seenKey="anonchat_welcome_seen_v1";
+ const tabs=[...screen.querySelectorAll("[data-auth-tab]")];
  function close(){screen.classList.add("hidden");try{localStorage.setItem(seenKey,"1")}catch(e){}}
- window.showWelcomeScreen=function(){screen.classList.remove("hidden")};
+ window.showWelcomeScreen=function(){screen.classList.remove("hidden");selectTab("guest")};
+ function selectTab(name){tabs.forEach(t=>t.classList.toggle("active",t.dataset.authTab===name));screen.querySelectorAll("[data-auth-panel]").forEach(p=>p.classList.toggle("hidden",p.dataset.authPanel!==name));document.getElementById("welcomeAuthMessage").textContent="";}
+ tabs.forEach(t=>t.addEventListener("click",()=>selectTab(t.dataset.authTab)));
+ let guestGender="male",registerGender="male";
+ screen.querySelectorAll("[data-gender]").forEach(b=>b.addEventListener("click",()=>{guestGender=b.dataset.gender;screen.querySelectorAll("[data-gender]").forEach(x=>x.classList.toggle("active",x===b))}));
+ screen.querySelectorAll("[data-register-gender]").forEach(b=>b.addEventListener("click",()=>{registerGender=b.dataset.registerGender;screen.querySelectorAll("[data-register-gender]").forEach(x=>x.classList.toggle("active",x===b))}));
+ document.getElementById("welcomeGuest").addEventListener("click",()=>{
+  const consent=document.getElementById("welcomeAdultConsent");
+  if(!consent.checked){document.getElementById("welcomeAuthMessage").textContent="Подтвердите, что вам исполнилось 18 лет и вы согласны с условиями.";return}
+  const gender=document.getElementById("gender");if(gender)gender.value=guestGender;
+  if(typeof window.saveProfile==="function")window.saveProfile();
+  close();
+ });
+ document.getElementById("welcomeLoginSubmit").addEventListener("click",()=>{
+  document.getElementById("authEmail").value=document.getElementById("welcomeLoginEmail").value.trim();
+  document.getElementById("authPassword").value=document.getElementById("welcomeLoginPassword").value;
+  close();document.getElementById("loginBtn").click();
+ });
+ document.getElementById("welcomeRegisterSubmit").addEventListener("click",()=>{
+  const email=document.getElementById("welcomeRegisterEmail").value.trim(),password=document.getElementById("welcomeRegisterPassword").value;
+  if(password.length<8){document.getElementById("welcomeAuthMessage").textContent="Пароль должен содержать не менее 8 символов.";return}
+  document.getElementById("authEmail").value=email;document.getElementById("authPassword").value=password;
+  const gender=document.getElementById("gender");if(gender)gender.value=registerGender;
+  close();document.getElementById("registerBtn").click();
+ });
  let seen=false;try{seen=localStorage.getItem(seenKey)==="1"}catch(e){}
  if(!seen&&!localStorage.getItem("anonchat_token"))screen.classList.remove("hidden");
- document.getElementById("welcomeGuest").addEventListener("click",close);
- document.getElementById("welcomeRegister").addEventListener("click",()=>{close();document.getElementById("accountCard")?.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>document.getElementById("authEmail")?.focus(),350)});
- document.getElementById("welcomeLogin").addEventListener("click",()=>{close();document.getElementById("accountCard")?.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>document.getElementById("loginBtn")?.focus(),350)});
 })();
 </script>
 <div id="swingEaster" class="swing-easter hidden" role="dialog" aria-modal="true" aria-labelledby="swingTitle">
