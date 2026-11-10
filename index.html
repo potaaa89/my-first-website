@@ -900,6 +900,22 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
 .videoCard:fullscreen video,.videoCard.remote-video-fullscreen video{
  width:100%!important;height:100%!important;object-fit:contain!important;
 }
+.videoCard:fullscreen>.local-video-overlay,
+.videoCard.remote-video-fullscreen>.local-video-overlay{
+ position:absolute!important;top:22px!important;left:22px!important;right:auto!important;bottom:auto!important;
+ z-index:100000!important;width:clamp(150px,18vw,280px)!important;height:auto!important;
+ aspect-ratio:16/10!important;min-width:0!important;max-width:32vw!important;
+ border:2px solid #fff!important;border-radius:14px!important;overflow:hidden!important;
+ box-shadow:0 8px 30px #0008!important;background:#101827!important;
+}
+.videoCard:fullscreen>.local-video-overlay video,
+.videoCard.remote-video-fullscreen>.local-video-overlay video{
+ width:100%!important;height:100%!important;object-fit:cover!important;
+}
+.videoCard:fullscreen>.local-video-overlay .videoLabel,
+.videoCard.remote-video-fullscreen>.local-video-overlay .videoLabel{
+ left:8px!important;bottom:7px!important;font-size:12px!important;padding:5px 8px!important;
+}
 .videoCard:fullscreen .videoLabel,.videoCard.remote-video-fullscreen .videoLabel{
  left:22px!important;bottom:20px!important;font-size:15px!important;padding:8px 12px!important;
 }
@@ -915,26 +931,54 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
 (function(){
  const remote=document.getElementById("remoteVideo");
  const card=remote?.closest(".videoCard");
- if(!remote||!card)return;
+ const stage=document.getElementById("videostage");
+ const localCard=stage?.querySelector(".videoCard:first-child");
+ if(!remote||!card||!localCard)return;
  const btn=document.createElement("button");
  btn.type="button";btn.className="remote-fullscreen-btn";
  btn.title="Развернуть видео собеседника на весь экран";
  btn.setAttribute("aria-label",btn.title);
  btn.textContent="⛶";
  card.appendChild(btn);
+ let restorePoint=null;
+ function moveLocalIntoFullscreen(){
+  if(!restorePoint){
+   restorePoint=document.createComment("local video original position");
+   localCard.parentNode.insertBefore(restorePoint,localCard);
+  }
+  localCard.classList.add("local-video-overlay");
+  card.appendChild(localCard);
+ }
+ function restoreLocal(){
+  if(restorePoint?.parentNode){
+   restorePoint.parentNode.insertBefore(localCard,restorePoint);
+   restorePoint.remove();
+  }
+  restorePoint=null;
+  localCard.classList.remove("local-video-overlay");
+ }
  function isFull(){return document.fullscreenElement===card||card.classList.contains("remote-video-fullscreen")}
  async function toggle(){
   try{
-   if(document.fullscreenElement){await document.exitFullscreen();return}
+   if(document.fullscreenElement===card){
+    await document.exitFullscreen();return;
+   }
+   if(card.classList.contains("remote-video-fullscreen")){
+    card.classList.remove("remote-video-fullscreen");restoreLocal();return;
+   }
+   moveLocalIntoFullscreen();
    if(card.requestFullscreen){await card.requestFullscreen()}
-   else if(remote.webkitEnterFullscreen){remote.webkitEnterFullscreen()}
    else{card.classList.add("remote-video-fullscreen")}
-  }catch(e){card.classList.toggle("remote-video-fullscreen")}
+  }catch(e){
+   if(!document.fullscreenElement)card.classList.add("remote-video-fullscreen");
+   else restoreLocal();
+  }
  }
  btn.addEventListener("click",toggle);
  remote.addEventListener("dblclick",toggle);
  document.addEventListener("fullscreenchange",()=>{
-  const active=isFull();btn.textContent=active?"⛶":"⛶";
+  const active=isFull();
+  if(!active)restoreLocal();
   btn.title=active?"Выйти из полноэкранного режима":"Развернуть видео собеседника на весь экран";
   btn.setAttribute("aria-label",btn.title);
  });
