@@ -10,7 +10,7 @@ const app=express();
 app.set("trust proxy",1);
 app.use((req,res,next)=>{
  const origin=req.headers.origin;
- if(origin==="https://potaaa89.github.io"){res.setHeader("Access-Control-Allow-Origin",origin);res.setHeader("Vary","Origin");res.setHeader("Access-Control-Allow-Methods","GET,POST,PUT,OPTIONS");res.setHeader("Access-Control-Allow-Headers","Content-Type,Authorization");}
+ if(origin==="https://potaaa89.github.io"){res.setHeader("Access-Control-Allow-Origin",origin);res.setHeader("Vary","Origin");res.setHeader("Access-Control-Allow-Methods","GET,POST,PUT,DELETE,OPTIONS");res.setHeader("Access-Control-Allow-Headers","Content-Type,Authorization");}
  if(req.method==="OPTIONS")return res.sendStatus(204);
  next();
 });
