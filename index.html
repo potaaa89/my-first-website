@@ -1087,27 +1087,28 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
 }
 </style>
 <style id="anonchat-in-call-controls-style">
-.self-call-controls{position:absolute;right:7px;bottom:7px;z-index:30;display:flex;gap:5px;padding:4px;border-radius:12px;background:rgba(12,20,36,.78);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.self-call-controls{position:absolute;left:50%;right:auto;bottom:10px;transform:translateX(-50%);z-index:30;display:flex;justify-content:center;gap:7px;padding:6px 8px;border-radius:14px;background:rgba(12,20,36,.82);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);max-width:calc(100% - 20px)}
 .self-call-control{width:32px;height:32px;border:1px solid #ffffff55;border-radius:9px;background:#ffffff1c;color:#fff;display:grid;place-items:center;font-size:16px;line-height:1;cursor:pointer;padding:0}
 .self-call-control[aria-pressed="true"]{background:#d94355;border-color:#ffb5bd}
 .self-call-control:disabled{opacity:.38;cursor:not-allowed}
 .self-call-control:focus-visible{outline:2px solid #fff;outline-offset:2px}
-@media(min-width:761px){.self-call-controls{right:9px;bottom:9px;gap:6px;padding:5px}.self-call-control{width:36px;height:36px;font-size:17px}}
-@media(max-width:760px){.self-call-controls{right:6px;bottom:6px;gap:4px;padding:3px}.self-call-control{width:29px;height:29px;font-size:14px;border-radius:8px}}
+@media(min-width:761px){.self-call-controls{bottom:16px;gap:8px;padding:7px 10px}.self-call-control{width:40px;height:40px;font-size:18px}}
+@media(max-width:760px){.self-call-controls{bottom:8px;gap:5px;padding:5px 6px}.self-call-control{width:36px;height:36px;font-size:16px;border-radius:9px}}
 </style><script id="anonchat-in-call-controls">
 (function(){
- const tile=document.querySelector("#videostage>.videoCard:first-child");
+ const stage=document.getElementById("videostage");
  const remote=document.getElementById("remoteVideo");
- if(!tile||!remote)return;
+ if(!stage||!remote)return;
  const bar=document.createElement("div");bar.className="self-call-controls";bar.setAttribute("aria-label","Управление звонком");
  const defs=[
   {id:"toggleCamera",icon:"📷",label:"Выключить камеру",off:"Включить камеру"},
   {id:"toggleMic",icon:"🎙️",label:"Выключить микрофон",off:"Включить микрофон"},
-  {id:"toggleSpeaker",icon:"🔊",label:"Выключить звук собеседника",off:"Включить звук собеседника"}
+  {id:"toggleSpeaker",icon:"🔊",label:"Выключить звук собеседника",off:"Включить звук собеседника"},
+  {id:"hangupCall",icon:"📞",label:"Завершить звонок",off:"Завершить звонок"}
  ];
  const buttons={};
  defs.forEach(d=>{const b=document.createElement("button");b.type="button";b.className="self-call-control";b.id=d.id;b.textContent=d.icon;b.title=d.label;b.setAttribute("aria-label",d.label);b.setAttribute("aria-pressed","false");bar.appendChild(b);buttons[d.id]=b});
- tile.appendChild(bar);
+ stage.appendChild(bar);
  function setState(id,off,labelOn,labelOff){const b=buttons[id];b.setAttribute("aria-pressed",String(off));b.title=off?labelOff:labelOn;b.setAttribute("aria-label",b.title);if(id==="toggleCamera")b.textContent=off?"🚫":"📷";if(id==="toggleMic")b.textContent=off?"🔇":"🎙️";if(id==="toggleSpeaker")b.textContent=off?"🔈":"🔊"}
  function active(){return !!localStream&&callStatus==="active"}
  function refresh(){
@@ -1115,6 +1116,7 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
   buttons.toggleCamera.disabled=!video||!active();
   buttons.toggleMic.disabled=!audio||!active();
   buttons.toggleSpeaker.disabled=!remote.srcObject||!active();
+  buttons.hangupCall.disabled=!active();
   setState("toggleCamera",!!video&&!video.enabled,"Выключить камеру","Включить камеру");
   setState("toggleMic",!!audio&&!audio.enabled,"Выключить микрофон","Включить микрофон");
   setState("toggleSpeaker",remote.muted,"Выключить звук собеседника","Включить звук собеседника");
@@ -1123,6 +1125,7 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  buttons.toggleCamera.addEventListener("click",()=>{const t=localStream?.getVideoTracks?.()[0];if(!t)return;t.enabled=!t.enabled;const off=!t.enabled;const ph=document.getElementById("localPlaceholder");if(ph){ph.textContent="Камера выключена";ph.style.display=off?"grid":"none"}refresh()});
  buttons.toggleMic.addEventListener("click",()=>{const t=localStream?.getAudioTracks?.()[0];if(!t)return;t.enabled=!t.enabled;refresh()});
  buttons.toggleSpeaker.addEventListener("click",()=>{remote.muted=!remote.muted;refresh()});
+ buttons.hangupCall.addEventListener("click",()=>{if(!active())return;if(socket?.connected)socket.emit("call_end");resetCall("Звонок завершён.")});
  const observer=new MutationObserver(refresh);observer.observe(document.getElementById("videostage"),{attributes:true,attributeFilter:["class"]});
  const timer=setInterval(()=>{if(!document.getElementById("videostage")){clearInterval(timer);observer.disconnect();return}refresh()},500);
  refresh();
