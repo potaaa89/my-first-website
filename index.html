@@ -365,6 +365,14 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
  }
  #discoveryUsers > .discovery-user > .discovery-actions{grid-column:1/-1!important;grid-row:2!important}
 }
+
+/* Desktop: balanced three-column AnonChat workspace */
+@media (min-width:1181px){
+ .workspace{width:100%!important;max-width:1540px!important;margin:0 auto!important;padding:20px 24px!important;display:grid!important;grid-template-columns:minmax(260px,290px) minmax(420px,1fr) minmax(280px,330px)!important;gap:16px!important;align-items:start!important}
+ .workspace>.leftcol,.workspace>.centercol,.workspace>.rightcol{grid-column:auto!important;grid-row:1!important;width:auto!important;min-width:0!important;max-width:none!important;order:0!important}
+ .leftcol>.card,.centercol>.card,.rightcol>.card{width:100%!important;min-width:0!important}
+}
+@media (min-width:761px) and (max-width:1180px){.workspace{grid-template-columns:minmax(250px,290px) minmax(0,1fr)!important;gap:14px!important}.workspace>.rightcol{grid-column:2!important}}
 </style>
 </head>
 <body>
