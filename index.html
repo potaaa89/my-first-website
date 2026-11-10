@@ -895,7 +895,7 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
 #videostage:fullscreen .remote-fullscreen-btn,#videostage.stage-fullscreen-fallback .remote-fullscreen-btn{right:20px!important;top:20px!important;width:48px!important;height:48px!important;font-size:24px!important}
 @media(max-width:760px){
  .videoCard .remote-fullscreen-btn{width:38px;height:38px;right:8px;top:8px;font-size:21px}
- #videostage:fullscreen>.videoCard:first-child,#videostage.stage-fullscreen-fallback>.videoCard:first-child{inset:calc(env(safe-area-inset-top) + 12px) auto auto 12px!important;width:clamp(112px,30vw,170px)!important;max-width:38vw!important}
+ #videostage:fullscreen>.videoCard:first-child,#videostage.stage-fullscreen-fallback>.videoCard:first-child{top:calc(env(safe-area-inset-top) + 12px)!important;left:12px!important;right:auto!important;bottom:auto!important;inset-inline-start:12px!important;inset-inline-end:auto!important;width:clamp(112px,30vw,170px)!important;max-width:38vw!important}
  #videostage:fullscreen .remote-fullscreen-btn,#videostage.stage-fullscreen-fallback .remote-fullscreen-btn{right:calc(env(safe-area-inset-right) + 12px)!important;top:calc(env(safe-area-inset-top) + 12px)!important;width:42px!important;height:42px!important}
  #videostage.stage-fullscreen-fallback{height:100dvh!important}
  body.mobile-video-fullscreen{overflow:hidden!important;touch-action:manipulation}
