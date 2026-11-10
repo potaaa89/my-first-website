@@ -448,6 +448,22 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
 .welcome-note{margin-top:20px;color:#9aa4b6;font-size:11px}
 @media(max-width:760px){.welcome-screen{padding:15px}.welcome-card{padding:36px 22px 27px;border-radius:23px}.welcome-logo{margin-bottom:27px}.welcome-card h1{font-size:30px}.welcome-description{font-size:14px}}
 </style>
+<style id="anonchat-emotional-swing-style">
+.swing-easter{position:fixed;inset:0;z-index:10060;display:grid;place-items:center;padding:18px;background:rgba(12,17,39,.76);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+.swing-easter.hidden{display:none!important}
+.swing-card{width:min(100%,430px);padding:28px 24px 22px;border:1px solid #ffffff4a;border-radius:26px;background:linear-gradient(145deg,#fff 0%,#f3edff 58%,#eaf2ff 100%);box-shadow:0 24px 80px #0007;text-align:center;overflow:hidden}
+.swing-secret{display:inline-block;padding:5px 10px;border-radius:30px;background:#eee7ff;color:#7150c8;font-size:10px;font-weight:850;letter-spacing:1.5px}
+.swing-emoji{font-size:66px;line-height:1.3;margin:8px 0;transform-origin:50% 65%;animation:swingRide 1.45s ease-in-out infinite alternate}
+@keyframes swingRide{from{transform:rotate(-13deg) translateY(1px)}to{transform:rotate(13deg) translateY(-2px)}}
+.swing-card h2{margin:4px 0 8px;color:#242c45;font-size:26px;letter-spacing:-.6px}
+.swing-card p{min-height:52px;margin:0 auto 16px;max-width:340px;color:#69758e;font-size:14px;line-height:1.55}
+.swing-mood{display:inline-block;margin:0 auto 17px;padding:11px 15px;border:1px solid #e1d6ff;border-radius:14px;background:#fff;color:#513c91;font-weight:750;font-size:14px;box-shadow:0 5px 16px #7860b51a}
+.swing-buttons{display:flex;gap:9px}
+.swing-buttons .btn{flex:1;min-height:42px}
+.swing-hint{margin-top:14px;color:#9aa2b4;font-size:10px}
+@media(max-width:760px){.swing-card{padding:25px 18px 19px;border-radius:22px}.swing-card h2{font-size:23px}.swing-emoji{font-size:58px}.swing-buttons{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){.swing-emoji{animation:none}}
+</style>
 </head>
 <body>
 <div id="welcomeScreen" class="welcome-screen hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
@@ -1177,6 +1193,51 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  document.getElementById("welcomeGuest").addEventListener("click",close);
  document.getElementById("welcomeRegister").addEventListener("click",()=>{close();document.getElementById("accountCard")?.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>document.getElementById("authEmail")?.focus(),350)});
  document.getElementById("welcomeLogin").addEventListener("click",()=>{close();document.getElementById("accountCard")?.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>document.getElementById("loginBtn")?.focus(),350)});
+})();
+</script>
+<div id="swingEaster" class="swing-easter hidden" role="dialog" aria-modal="true" aria-labelledby="swingTitle">
+ <div class="swing-card">
+  <span class="swing-secret">СЕКРЕТНЫЙ РЕЖИМ ANONCHAT</span>
+  <div class="swing-emoji" aria-hidden="true">🎢</div>
+  <h2 id="swingTitle">Эмоциональные качели</h2>
+  <p>Добро пожаловать на аттракцион знакомств. Пристегнись — настроение сейчас поменяется 😅</p>
+  <div class="swing-mood" id="swingMood">«Напишу… нет, пусть сам пишет!» 💬</div>
+  <div class="swing-buttons"><button type="button" class="btn primary" id="swingAgain">Качнуть ещё</button><button type="button" class="btn secondary" id="swingClose">Вернуться в чат</button></div>
+  <div class="swing-hint">Секрет найден: 5 быстрых нажатий на логотип ✨</div>
+ </div>
+</div>
+<script id="anonchat-emotional-swing">
+(function(){
+ const overlay=document.getElementById("swingEaster");
+ if(!overlay)return;
+ const lines=[
+  "«Напишу… нет, пусть сам пишет!» 💬",
+  "«Онлайн был 2 секунды. Это знак?» 👀",
+  "«Ищу любовь… но сначала проверю, кто в сети» 💜",
+  "«Привет» — и уже придумал(а) свадьбу 😅",
+  "«Не буду проверять чат» — проверка №17 📱",
+  "Бабочки в животе или просто уведомление? 🦋"
+ ];
+ let taps=0,lastTap=0,line=0;
+ function close(){overlay.classList.add("hidden")}
+ function secretTap(){
+  const now=Date.now();
+  taps=now-lastTap<1900?taps+1:1;lastTap=now;
+  if(taps>=5){taps=0;overlay.classList.remove("hidden")}
+ }
+ document.querySelectorAll(".brand,.welcome-logo").forEach(el=>{
+  el.addEventListener("click",secretTap);
+  el.style.cursor="pointer";
+ });
+ document.getElementById("swingClose").addEventListener("click",close);
+ document.getElementById("swingAgain").addEventListener("click",()=>{
+  line=(line+1)%lines.length;
+  document.getElementById("swingMood").textContent=lines[line];
+  const card=overlay.querySelector(".swing-card");
+  card.animate([{transform:"rotate(-2deg) scale(.98)"},{transform:"rotate(2deg) scale(1.01)"},{transform:"rotate(0) scale(1)"}],{duration:380,easing:"ease-in-out"});
+ });
+ overlay.addEventListener("click",e=>{if(e.target===overlay)close()});
+ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!overlay.classList.contains("hidden"))close()});
 })();
 </script>
 </body></html>
