@@ -1,64 +1,71 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#17204b">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#17204b">
 <title>Пользовательское соглашение — AnonChat</title>
 <style>
-:root{--bg:#f3f5fb;--paper:#fff;--ink:#20283a;--muted:#68748b;--blue:#4778e8;--line:#e6eaf2}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#17204b,#283b80);min-height:100vh;padding:34px 16px;color:var(--ink);font:15px/1.7 Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
-main{max-width:880px;margin:0 auto;background:var(--paper);border-radius:22px;padding:clamp(22px,5vw,48px);box-shadow:0 22px 70px #080d2c66}
-.brand{display:inline-flex;align-items:center;gap:10px;color:var(--blue);font-weight:850;text-decoration:none;font-size:18px}.mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#5591ff,#4265d8);color:#fff;display:grid;place-items:center}
-h1{font-size:clamp(27px,5vw,38px);line-height:1.2;margin:25px 0 8px}h2{font-size:19px;margin:28px 0 8px;color:#26345b}p,li{color:#46536b} .updated{color:var(--muted);font-size:13px}.notice{padding:14px 16px;background:#eef4ff;border-left:4px solid var(--blue);border-radius:10px;margin:20px 0}.back{display:inline-block;margin-top:28px;padding:11px 17px;background:var(--blue);color:white;text-decoration:none;border-radius:10px;font-weight:750}
-</style>
-</head>
-<body>
-<main>
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#17204b,#283b80);min-height:100vh;padding:30px 14px;color:#20283a;font:15px/1.7 Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+main{max-width:900px;margin:0 auto;background:#fff;border-radius:22px;padding:clamp(20px,5vw,46px);box-shadow:0 22px 70px #080d2c66}
+.brand{display:inline-flex;align-items:center;gap:10px;color:#4778e8;font-weight:850;text-decoration:none;font-size:18px}.mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#5591ff,#4265d8);color:#fff;display:grid;place-items:center}
+h1{font-size:clamp(27px,5vw,38px);line-height:1.2;margin:25px 0 8px}h2{font-size:19px;margin:27px 0 8px;color:#26345b}p,li{color:#46536b}.updated{color:#68748b;font-size:13px}
+.langs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 24px}.lang-btn{border:1px solid #dce3f1;border-radius:10px;padding:9px 17px;background:#fff;color:#405071;font-weight:750;cursor:pointer}.lang-btn.active{background:#4778e8;color:#fff;border-color:#4778e8}
+.notice{padding:14px 16px;background:#eef4ff;border-left:4px solid #4778e8;border-radius:10px;margin:20px 0}.lang-content[hidden]{display:none}.back{display:inline-block;margin-top:28px;padding:11px 17px;background:#4778e8;color:white;text-decoration:none;border-radius:10px;font-weight:750}
+</style></head>
+<body><main>
 <a class="brand" href="./"><span class="mark">✦</span> AnonChat</a>
-<h1>Пользовательское соглашение</h1>
-<p class="updated">Дата публикации: 10 ноября 2026 года</p>
+<div class="langs" role="group" aria-label="Choose language">
+<button class="lang-btn active" type="button" data-lang="ru">Русский</button><button class="lang-btn" type="button" data-lang="uk">Українська</button><button class="lang-btn" type="button" data-lang="en">English</button>
+</div>
+<section class="lang-content" data-content="ru" lang="ru">
+<h1>Пользовательское соглашение</h1><p class="updated">Дата публикации: 10 ноября 2026 года</p>
 <div class="notice"><strong>Важно:</strong> AnonChat предназначен исключительно для лиц, достигших 18 лет. Используя сайт, вы подтверждаете, что вам исполнилось 18 лет, и соглашаетесь соблюдать настоящие правила.</div>
-
-<h2>1. Общие положения</h2>
-<p>Настоящее Пользовательское соглашение определяет правила доступа и использования сайта AnonChat (далее — Сервис). Продолжая пользоваться Сервисом, пользователь подтверждает, что ознакомился с условиями и принимает их. Если вы не согласны с условиями, прекратите использование Сервиса.</p>
-
-<h2>2. Возрастные ограничения</h2>
-<p>Сервис доступен только совершеннолетним пользователям (18+). Несовершеннолетним запрещено создавать аккаунты, входить в гостевой режим и пользоваться функциями Сервиса. Пользователь обязуется указывать достоверные сведения о своём возрасте.</p>
-
-<h2>3. Правила поведения</h2>
-<ul>
-<li>Запрещены угрозы, травля, преследование, оскорбления и дискриминация.</li>
-<li>Запрещено размещать незаконные материалы, материалы с сексуальной эксплуатацией, а также любой контент с участием несовершеннолетних.</li>
-<li>Запрещены спам, массовая рассылка сообщений, мошенничество, фишинг и попытки получить чужие пароли или платёжные данные.</li>
-<li>Запрещено выдавать себя за другого человека или использовать Сервис для нарушения прав третьих лиц.</li>
-<li>Нельзя публиковать чужие персональные данные, фотографии или записи без законного основания и необходимого согласия.</li>
-<li>Пользователь обязан уважать отказ собеседника от общения и немедленно прекратить нежелательный контакт.</li>
-</ul>
-
-<h2>4. Гостевой режим и аккаунт</h2>
-<p>Сервис может предоставлять гостевой доступ без регистрации. Гостевой режим может иметь ограничения по сравнению с аккаунтом. Пользователь несёт ответственность за сохранность данных для входа в аккаунт и за действия, совершённые с использованием его учётной записи.</p>
-
-<h2>5. Сообщения, изображения и звонки</h2>
-<p>Пользователь самостоятельно отвечает за содержание отправляемых сообщений, изображений и иных материалов, а также за законность их передачи. Не отправляйте незнакомым людям пароли, адреса, финансовые сведения и другую конфиденциальную информацию. Помните, что собеседник может сохранить полученный контент средствами своего устройства.</p>
-
-<h2>6. Жалобы и ограничения доступа</h2>
-<p>Если вы столкнулись с нарушением правил, воспользуйтесь функцией жалобы или блокировки, если она доступна. Администрация Сервиса вправе проверять поступившие жалобы и ограничивать доступ пользователей, нарушающих соглашение или применимое законодательство.</p>
-
-<h2>7. Персональные данные и конфиденциальность</h2>
-<p>При использовании Сервиса могут обрабатываться сведения, которые пользователь предоставляет при регистрации или заполнении профиля, а также технические данные, необходимые для работы, безопасности и защиты от злоупотреблений. Не размещайте в профиле и переписке данные, которые не хотите раскрывать другим пользователям.</p>
-<p>Данные аккаунта и переписки могут обрабатываться для предоставления функций Сервиса, обеспечения безопасности, рассмотрения жалоб и выполнения требований законодательства. Сроки хранения, состав данных, правовые основания и порядок реализации прав пользователя должны определяться отдельной Политикой конфиденциальности.</p>
-
-<h2>8. Доступность и ответственность</h2>
-<p>Сервис предоставляется «как есть». Администрация стремится поддерживать его работу, но не гарантирует бесперебойную доступность, отсутствие ошибок или постоянное хранение пользовательского контента. Пользователь самостоятельно оценивает риски общения с незнакомыми людьми и отвечает за свои действия.</p>
-
-<h2>9. Изменение соглашения</h2>
-<p>Условия могут обновляться. Актуальная редакция публикуется на этой странице. Продолжение использования Сервиса после публикации изменений означает согласие с новой редакцией.</p>
-
-<h2>10. Контакты</h2>
-<p>По вопросам работы Сервиса и настоящего соглашения используйте доступные на сайте каналы связи, если они опубликованы.</p>
-
-<a class="back" href="./">Вернуться в AnonChat</a>
+<h2>1. Общие положения</h2><p>Настоящее Пользовательское соглашение определяет правила доступа и использования сайта AnonChat (далее — «Сервис»). Продолжая пользоваться Сервисом, пользователь подтверждает, что ознакомился с условиями и принимает их. Если вы не согласны с условиями, прекратите использование Сервиса.</p>
+<h2>2. Возрастные ограничения</h2><p>Сервис доступен только совершеннолетним пользователям (18+). Несовершеннолетним запрещено создавать аккаунты, входить в гостевой режим и пользоваться функциями Сервиса. Пользователь обязуется указывать достоверные сведения о своём возрасте.</p>
+<h2>3. Правила поведения</h2><ul><li>Запрещены угрозы, травля, преследование, оскорбления и дискриминация.</li><li>Запрещено размещать незаконные материалы, материалы с сексуальной эксплуатацией, а также любой контент с участием несовершеннолетних.</li><li>Запрещены спам, массовая рассылка сообщений, мошенничество, фишинг и попытки получить чужие пароли или платёжные данные.</li><li>Запрещено выдавать себя за другого человека или использовать Сервис для нарушения прав третьих лиц.</li><li>Нельзя публиковать чужие персональные данные, фотографии или записи без законного основания и необходимого согласия.</li><li>Пользователь обязан уважать отказ собеседника от общения и немедленно прекратить нежелательный контакт.</li></ul>
+<h2>4. Гостевой режим и аккаунт</h2><p>Сервис может предоставлять гостевой доступ без регистрации. Гостевой режим может иметь ограничения по сравнению с аккаунтом. Пользователь несёт ответственность за сохранность данных для входа в аккаунт и за действия, совершённые с использованием его учётной записи.</p>
+<h2>5. Сообщения, изображения и звонки</h2><p>Пользователь самостоятельно отвечает за содержание отправляемых сообщений, изображений и иных материалов, а также за законность их передачи. Не отправляйте незнакомым людям пароли, адреса, финансовые сведения и другую конфиденциальную информацию. Собеседник может сохранить полученный контент средствами своего устройства.</p>
+<h2>6. Жалобы и ограничения доступа</h2><p>Если вы столкнулись с нарушением правил, воспользуйтесь функцией жалобы или блокировки, если она доступна. Администрация Сервиса вправе проверять поступившие жалобы и ограничивать доступ пользователей, нарушающих соглашение или применимое законодательство.</p>
+<h2>7. Персональные данные и конфиденциальность</h2><p>При использовании Сервиса могут обрабатываться сведения, которые пользователь предоставляет при регистрации или заполнении профиля, а также технические данные, необходимые для работы, безопасности и защиты от злоупотреблений. Не размещайте в профиле и переписке данные, которые не хотите раскрывать другим пользователям.</p><p>Данные аккаунта и переписки могут обрабатываться для предоставления функций Сервиса, обеспечения безопасности, рассмотрения жалоб и выполнения требований законодательства. Состав данных, правовые основания, сроки хранения и порядок реализации прав пользователя должны определяться отдельной Политикой конфиденциальности.</p>
+<h2>8. Доступность и ответственность</h2><p>Сервис предоставляется «как есть». Администрация стремится поддерживать его работу, но не гарантирует бесперебойную доступность, отсутствие ошибок или постоянное хранение пользовательского контента. Пользователь самостоятельно оценивает риски общения с незнакомыми людьми и отвечает за свои действия.</p>
+<h2>9. Изменение соглашения</h2><p>Условия могут обновляться. Актуальная редакция публикуется на этой странице. Продолжение использования Сервиса после публикации изменений означает согласие с новой редакцией.</p>
+<h2>10. Контакты</h2><p>По вопросам работы Сервиса и настоящего соглашения используйте доступные на сайте каналы связи, если они опубликованы.</p>
+</section>
+<section class="lang-content" data-content="uk" lang="uk" hidden>
+<h1>Угода користувача</h1><p class="updated">Дата публікації: 10 листопада 2026 року</p>
+<div class="notice"><strong>Важливо:</strong> AnonChat призначений виключно для осіб, які досягли 18 років. Використовуючи сайт, ви підтверджуєте, що вам виповнилося 18 років, і погоджуєтеся дотримуватися цих правил.</div>
+<h2>1. Загальні положення</h2><p>Ця Угода користувача визначає правила доступу та використання сайту AnonChat (далі — «Сервіс»). Продовжуючи користуватися Сервісом, користувач підтверджує, що ознайомився з умовами та приймає їх. Якщо ви не погоджуєтеся з умовами, припиніть використання Сервісу.</p>
+<h2>2. Вікові обмеження</h2><p>Сервіс доступний лише повнолітнім користувачам (18+). Неповнолітнім заборонено створювати облікові записи, входити в гостьовий режим і користуватися функціями Сервісу. Користувач зобов’язується надавати достовірні відомості про свій вік.</p>
+<h2>3. Правила поведінки</h2><ul><li>Заборонені погрози, цькування, переслідування, образи та дискримінація.</li><li>Заборонено розміщувати незаконні матеріали, матеріали із сексуальною експлуатацією, а також будь-який контент за участю неповнолітніх.</li><li>Заборонені спам, масове надсилання повідомлень, шахрайство, фішинг і спроби отримати чужі паролі чи платіжні дані.</li><li>Заборонено видавати себе за іншу особу або використовувати Сервіс для порушення прав третіх осіб.</li><li>Не можна публікувати чужі персональні дані, фотографії чи записи без законних підстав і необхідної згоди.</li><li>Користувач повинен поважати відмову співрозмовника від спілкування та негайно припинити небажаний контакт.</li></ul>
+<h2>4. Гостьовий режим та обліковий запис</h2><p>Сервіс може надавати гостьовий доступ без реєстрації. Гостьовий режим може мати обмеження порівняно з обліковим записом. Користувач відповідає за збереження даних для входу та за дії, вчинені з використанням його облікового запису.</p>
+<h2>5. Повідомлення, зображення та дзвінки</h2><p>Користувач самостійно відповідає за зміст надісланих повідомлень, зображень та інших матеріалів, а також за законність їх передавання. Не надсилайте незнайомцям паролі, адреси, фінансові відомості та іншу конфіденційну інформацію. Співрозмовник може зберегти отриманий контент засобами свого пристрою.</p>
+<h2>6. Скарги та обмеження доступу</h2><p>Якщо ви зіткнулися з порушенням правил, скористайтеся функцією скарги або блокування, якщо вона доступна. Адміністрація Сервісу має право перевіряти скарги та обмежувати доступ користувачів, які порушують угоду або чинне законодавство.</p>
+<h2>7. Персональні дані та конфіденційність</h2><p>Під час використання Сервісу можуть оброблятися відомості, які користувач надає під час реєстрації або заповнення профілю, а також технічні дані, необхідні для роботи, безпеки та захисту від зловживань. Не розміщуйте у профілі та листуванні дані, які не бажаєте розкривати іншим користувачам.</p><p>Дані облікового запису та листування можуть оброблятися для надання функцій Сервісу, забезпечення безпеки, розгляду скарг і виконання вимог законодавства. Склад даних, правові підстави, строки зберігання та порядок реалізації прав користувача мають визначатися окремою Політикою конфіденційності.</p>
+<h2>8. Доступність і відповідальність</h2><p>Сервіс надається «як є». Адміністрація прагне підтримувати його роботу, але не гарантує безперервної доступності, відсутності помилок або постійного зберігання користувацького контенту. Користувач самостійно оцінює ризики спілкування з незнайомцями та відповідає за свої дії.</p>
+<h2>9. Зміни до угоди</h2><p>Умови можуть оновлюватися. Актуальна редакція публікується на цій сторінці. Продовження використання Сервісу після публікації змін означає згоду з новою редакцією.</p>
+<h2>10. Контакти</h2><p>З питань роботи Сервісу та цієї Угоди користуйтеся доступними на сайті каналами зв’язку, якщо їх опубліковано.</p>
+</section>
+<section class="lang-content" data-content="en" lang="en" hidden>
+<h1>Terms of Service</h1><p class="updated">Published: November 10, 2026</p>
+<div class="notice"><strong>Important:</strong> AnonChat is intended exclusively for people aged 18 or older. By using the website, you confirm that you are at least 18 years old and agree to follow these rules.</div>
+<h2>1. General</h2><p>These Terms of Service govern access to and use of the AnonChat website (the “Service”). By continuing to use the Service, you confirm that you have read and accepted these terms. If you do not agree, stop using the Service.</p>
+<h2>2. Age restriction</h2><p>The Service is available only to adults aged 18 or older. Minors may not create accounts, enter guest mode, or use the Service. Users must provide truthful information about their age.</p>
+<h2>3. Code of conduct</h2><ul><li>Threats, bullying, harassment, insults, and discrimination are prohibited.</li><li>Illegal material, material involving sexual exploitation, and any content involving minors are prohibited.</li><li>Spam, bulk messaging, fraud, phishing, and attempts to obtain another person’s passwords or payment details are prohibited.</li><li>You may not impersonate another person or use the Service to violate the rights of others.</li><li>You may not publish another person’s personal data, photos, or recordings without a lawful basis and any required consent.</li><li>You must respect another user’s decision to end a conversation and stop unwanted contact immediately.</li></ul>
+<h2>4. Guest mode and accounts</h2><p>The Service may offer guest access without registration. Guest mode may have limitations compared with a registered account. You are responsible for keeping your account credentials secure and for activity carried out through your account.</p>
+<h2>5. Messages, images, and calls</h2><p>You are responsible for the content and legality of messages, images, and other materials you send. Do not share passwords, addresses, financial information, or other confidential information with strangers. Other users may save content they receive using their own devices.</p>
+<h2>6. Reports and access restrictions</h2><p>If you encounter a violation, use the report or block feature where available. The Service administration may review reports and restrict access for users who violate these terms or applicable law.</p>
+<h2>7. Personal data and privacy</h2><p>When you use the Service, we may process information you provide during registration or profile setup, as well as technical data needed to operate and secure the Service and prevent abuse. Do not place information in your profile or messages that you do not want other users to see.</p><p>Account and message data may be processed to provide Service features, maintain security, review reports, and comply with legal requirements. The categories of data, legal bases, retention periods, and how users can exercise their rights should be set out in a separate Privacy Policy.</p>
+<h2>8. Availability and liability</h2><p>The Service is provided “as is.” The administration seeks to keep it available but does not guarantee uninterrupted access, error-free operation, or permanent storage of user content. You assess the risks of communicating with strangers and are responsible for your own actions.</p>
+<h2>9. Changes to these terms</h2><p>These terms may be updated. The current version will be published on this page. Continued use of the Service after changes are published means that you accept the revised terms.</p>
+<h2>10. Contact</h2><p>For questions about the Service or these terms, use the contact channels published on the website, if available.</p>
+</section>
+<a class="back" href="./" id="backLink">Вернуться в AnonChat</a>
 </main>
-</body>
-</html>
+<script>
+(function(){
+ const buttons=[...document.querySelectorAll("[data-lang]")],sections=[...document.querySelectorAll("[data-content]")],back=document.getElementById("backLink");
+ const backText={ru:"Вернуться в AnonChat",uk:"Повернутися до AnonChat",en:"Back to AnonChat"};
+ function setLanguage(lang){document.documentElement.lang=lang;buttons.forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));sections.forEach(s=>s.hidden=s.dataset.content!==lang);back.textContent=backText[lang];try{localStorage.setItem("anonchat_terms_language",lang)}catch(e){}}
+ let lang="ru";try{const saved=localStorage.getItem("anonchat_terms_language");if(["ru","uk","en"].includes(saved))lang=saved;else if(navigator.language.toLowerCase().startsWith("uk"))lang="uk";else if(navigator.language.toLowerCase().startsWith("en"))lang="en"}catch(e){}
+ buttons.forEach(b=>b.addEventListener("click",()=>setLanguage(b.dataset.lang)));setLanguage(lang);
+})();
+</script></body></html>
