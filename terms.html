@@ -10,12 +10,12 @@ main{max-width:900px;margin:0 auto;background:#fff;border-radius:22px;padding:cl
 h1{font-size:clamp(27px,5vw,38px);line-height:1.2;margin:25px 0 8px}h2{font-size:19px;margin:27px 0 8px;color:#26345b}p,li{color:#46536b}.updated{color:#68748b;font-size:13px}
 .langs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 24px}.lang-btn{border:1px solid #dce3f1;border-radius:10px;padding:9px 17px;background:#fff;color:#405071;font-weight:750;cursor:pointer}.lang-btn.active{background:#4778e8;color:#fff;border-color:#4778e8}
 .notice{padding:14px 16px;background:#eef4ff;border-left:4px solid #4778e8;border-radius:10px;margin:20px 0}.lang-content[hidden]{display:none}.back{display:inline-block;margin-top:28px;padding:11px 17px;background:#4778e8;color:white;text-decoration:none;border-radius:10px;font-weight:750}
+</style><style id="terms-language-stack">
+.language-divider{border:0;border-top:2px solid #e6eaf2;margin:38px 0}
+.lang-content{display:block!important}
 </style></head>
 <body><main>
 <a class="brand" href="./"><span class="mark">✦</span> AnonChat</a>
-<div class="langs" role="group" aria-label="Choose language">
-<button class="lang-btn active" type="button" data-lang="ru">Русский</button><button class="lang-btn" type="button" data-lang="uk">Українська</button><button class="lang-btn" type="button" data-lang="en">English</button>
-</div>
 <section class="lang-content" data-content="ru" lang="ru">
 <h1>Пользовательское соглашение</h1><p class="updated">Дата публикации: 10 ноября 2026 года</p>
 <div class="notice"><strong>Важно:</strong> AnonChat предназначен исключительно для лиц, достигших 18 лет. Используя сайт, вы подтверждаете, что вам исполнилось 18 лет, и соглашаетесь соблюдать настоящие правила.</div>
@@ -30,7 +30,7 @@ h1{font-size:clamp(27px,5vw,38px);line-height:1.2;margin:25px 0 8px}h2{font-size
 <h2>9. Изменение соглашения</h2><p>Условия могут обновляться. Актуальная редакция публикуется на этой странице. Продолжение использования Сервиса после публикации изменений означает согласие с новой редакцией.</p>
 <h2>10. Контакты</h2><p>По вопросам работы Сервиса и настоящего соглашения используйте доступные на сайте каналы связи, если они опубликованы.</p>
 </section>
-<section class="lang-content" data-content="uk" lang="uk" hidden>
+<hr class="language-divider"><section class="lang-content" data-content="uk" lang="uk">
 <h1>Угода користувача</h1><p class="updated">Дата публікації: 10 листопада 2026 року</p>
 <div class="notice"><strong>Важливо:</strong> AnonChat призначений виключно для осіб, які досягли 18 років. Використовуючи сайт, ви підтверджуєте, що вам виповнилося 18 років, і погоджуєтеся дотримуватися цих правил.</div>
 <h2>1. Загальні положення</h2><p>Ця Угода користувача визначає правила доступу та використання сайту AnonChat (далі — «Сервіс»). Продовжуючи користуватися Сервісом, користувач підтверджує, що ознайомився з умовами та приймає їх. Якщо ви не погоджуєтеся з умовами, припиніть використання Сервісу.</p>
@@ -44,7 +44,7 @@ h1{font-size:clamp(27px,5vw,38px);line-height:1.2;margin:25px 0 8px}h2{font-size
 <h2>9. Зміни до угоди</h2><p>Умови можуть оновлюватися. Актуальна редакція публікується на цій сторінці. Продовження використання Сервісу після публікації змін означає згоду з новою редакцією.</p>
 <h2>10. Контакти</h2><p>З питань роботи Сервісу та цієї Угоди користуйтеся доступними на сайті каналами зв’язку, якщо їх опубліковано.</p>
 </section>
-<section class="lang-content" data-content="en" lang="en" hidden>
+<hr class="language-divider"><section class="lang-content" data-content="en" lang="en">
 <h1>Terms of Service</h1><p class="updated">Published: November 10, 2026</p>
 <div class="notice"><strong>Important:</strong> AnonChat is intended exclusively for people aged 18 or older. By using the website, you confirm that you are at least 18 years old and agree to follow these rules.</div>
 <h2>1. General</h2><p>These Terms of Service govern access to and use of the AnonChat website (the “Service”). By continuing to use the Service, you confirm that you have read and accepted these terms. If you do not agree, stop using the Service.</p>
@@ -58,14 +58,6 @@ h1{font-size:clamp(27px,5vw,38px);line-height:1.2;margin:25px 0 8px}h2{font-size
 <h2>9. Changes to these terms</h2><p>These terms may be updated. The current version will be published on this page. Continued use of the Service after changes are published means that you accept the revised terms.</p>
 <h2>10. Contact</h2><p>For questions about the Service or these terms, use the contact channels published on the website, if available.</p>
 </section>
-<a class="back" href="./" id="backLink">Вернуться в AnonChat</a>
+<a class="back" href="./">Вернуться в AnonChat</a>
 </main>
-<script>
-(function(){
- const buttons=[...document.querySelectorAll("[data-lang]")],sections=[...document.querySelectorAll("[data-content]")],back=document.getElementById("backLink");
- const backText={ru:"Вернуться в AnonChat",uk:"Повернутися до AnonChat",en:"Back to AnonChat"};
- function setLanguage(lang){document.documentElement.lang=lang;buttons.forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));sections.forEach(s=>s.hidden=s.dataset.content!==lang);back.textContent=backText[lang];try{localStorage.setItem("anonchat_terms_language",lang)}catch(e){}}
- let lang="ru";try{const saved=localStorage.getItem("anonchat_terms_language");if(["ru","uk","en"].includes(saved))lang=saved;else if(navigator.language.toLowerCase().startsWith("uk"))lang="uk";else if(navigator.language.toLowerCase().startsWith("en"))lang="en"}catch(e){}
- buttons.forEach(b=>b.addEventListener("click",()=>setLanguage(b.dataset.lang)));setLanguage(lang);
-})();
-</script></body></html>
+</body></html>
