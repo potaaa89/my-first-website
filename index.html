@@ -505,11 +505,26 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
 .auth-banner-caption{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:max-content;max-width:90%;padding:9px 15px;border:1px solid #ffffffb8;border-radius:30px;background:#ffffffdf;color:#42317c;font-size:12px;font-weight:800;box-shadow:0 5px 22px #3c277a25;backdrop-filter:blur(8px)}
 .auth-banner-caption span{margin:0 5px}
 @media(max-width:540px){.auth-portrait-banner{grid-template-rows:78px 78px}.auth-portrait-banner img{height:78px}.auth-banner-caption{font-size:10px;padding:7px 10px}}
+</style><style id="anonchat-auth-portrait-fix">
+.auth-portrait-banner{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:180px;gap:0;overflow:hidden;background:radial-gradient(circle at 50% 10%,#ffffff 0,#f3eaff 38%,#dbe7ff 100%);padding:12px 12px 34px}
+.auth-portrait-banner img{display:none!important}
+.auth-person{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:18px;margin:0 5px}
+.auth-person-man{background:linear-gradient(145deg,#b8dcff,#6d8ff4)}
+.auth-person-woman{background:linear-gradient(145deg,#ffd2e9,#a78bfa)}
+.auth-orbit{position:absolute;width:138px;height:138px;border-radius:50%;border:2px solid #ffffff8a;box-shadow:0 0 0 13px #ffffff20,0 0 0 27px #ffffff12}
+.auth-person-emoji{position:relative;z-index:1;font-size:104px;line-height:1;filter:drop-shadow(0 9px 7px #26345b38);transform:translateY(-4px)}
+.auth-person span{position:absolute;z-index:2;bottom:10px;padding:5px 11px;border-radius:20px;background:#ffffffd9;color:#38446b;font-size:11px;font-weight:800;box-shadow:0 3px 12px #26345b18}
+.auth-banner-caption{top:auto;bottom:7px;left:50%;transform:translateX(-50%);width:max-content;max-width:90%;padding:5px 12px;border:1px solid #ffffffb8;border-radius:30px;background:#ffffffed;color:#42317c;font-size:11px;font-weight:800;box-shadow:0 4px 15px #3c277a20}
+@media(max-width:540px){.auth-portrait-banner{grid-template-rows:135px;padding:8px 8px 31px}.auth-person-emoji{font-size:78px}.auth-orbit{width:105px;height:105px}.auth-person{margin:0 3px}.auth-person span{font-size:9px;bottom:7px}.auth-banner-caption{font-size:10px}}
 </style></head>
 <body>
 <div id="welcomeScreen" class="welcome-screen hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
  <div class="welcome-card auth-welcome-card">
-  <div class="auth-portrait-banner" aria-label="Новые знакомства в AnonChat"><img src="assets/anonc-welcome-hero-1.webp" alt="Парень и девушка — новые знакомства"><img src="assets/anonc-welcome-hero-2.webp" alt=""><img src="assets/anonc-welcome-hero-3.webp" alt=""><img src="assets/anonc-welcome-hero-4.webp" alt=""><div class="auth-banner-caption"><span>💬</span> Новые знакомства начинаются здесь <span>💜</span></div></div>
+  <div class="auth-portrait-banner" aria-label="Иллюстрации парня и девушки">
+ <div class="auth-person auth-person-man"><div class="auth-orbit"></div><div class="auth-person-emoji">👨🏻‍🦱</div><span>Новые знакомства</span></div>
+ <div class="auth-person auth-person-woman"><div class="auth-orbit"></div><div class="auth-person-emoji">👩🏻‍🦰</div><span>Живое общение</span></div>
+ <div class="auth-banner-caption">💬 Здесь начинается общение 💜</div>
+</div>
   <div class="welcome-heading"><div class="welcome-mark">✦</div><h1 id="welcomeTitle">Добро пожаловать в AnonChat</h1><p>Знакомься, общайся и находи новых собеседников</p></div>
   <div class="welcome-cta-area">
    <div class="auth-tabs" role="tablist" aria-label="Авторизация">
