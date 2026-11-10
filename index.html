@@ -447,12 +447,15 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
  <section class="card" id="accountCard" style="margin-bottom:12px">
   <div class="profilebox"><div class="profilepic">☺</div><div class="profilemeta"><b id="profileHeading">Мой профиль</b><span id="profileMode">Гостевой режим</span></div><span class="tag" id="authState">Гость</span></div>
   <div class="pad">
-   <div class="sectiontitle">Аккаунт</div>
-   <div class="fields">
-    <div class="fieldwide"><label class="fieldlabel" for="authEmail">Email</label><input class="input" id="authEmail" type="email" placeholder="name@example.com" autocomplete="email"></div>
-    <div class="fieldwide"><label class="fieldlabel" for="authPassword">Пароль</label><input class="input" id="authPassword" type="password" minlength="8" placeholder="Не менее 8 символов" autocomplete="current-password"></div>
+   <div id="authFormFields">
+    <div class="sectiontitle">Аккаунт</div>
+    <div class="fields">
+     <div class="fieldwide"><label class="fieldlabel" for="authEmail">Email</label><input class="input" id="authEmail" type="email" placeholder="name@example.com" autocomplete="email"></div>
+     <div class="fieldwide"><label class="fieldlabel" for="authPassword">Пароль</label><input class="input" id="authPassword" type="password" minlength="8" placeholder="Не менее 8 символов" autocomplete="current-password"></div>
+    </div>
+    <div class="actions"><button class="btn primary" id="registerBtn" type="button">Регистрация</button><button class="btn secondary" id="loginBtn" type="button">Войти</button></div>
    </div>
-   <div class="actions"><button class="btn primary" id="registerBtn" type="button">Регистрация</button><button class="btn secondary" id="loginBtn" type="button">Войти</button><button class="btn danger full" id="logoutBtn" type="button" style="display:none">Выйти из аккаунта</button></div>
+   <div class="actions"><button class="btn danger full" id="logoutBtn" type="button" style="display:none">Выйти из аккаунта</button></div>
    <div class="authmessage" id="authMessage">Можно начать общение как гость или войти в аккаунт.</div>
    <div id="emailVerificationBox" class="hidden" style="margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:12px">
     <b>Подтверждение email</b>
@@ -584,7 +587,7 @@ async function loadAdminReports(){
 
 $("adminUserSearchBtn").onclick=loadAdminReports;$("adminUserSearch").addEventListener("keydown",e=>{if(e.key==="Enter")loadAdminReports()});
 $("adminPanelToggle").onclick=()=>{const content=$("adminPanelContent"),btn=$("adminPanelToggle");const collapsed=content.classList.toggle("hidden");btn.textContent=collapsed?"Развернуть":"Свернуть";btn.setAttribute("aria-expanded",String(!collapsed))};
-function showAuth(user){window.anonchatUserId=user?.id||"";$("authState").textContent=user?"Аккаунт":"Гость";$("logoutBtn").style.display=user?"inline-block":"none";$("registerBtn").style.display=user?"none":"inline-block";$("loginBtn").style.display=user?"none":"inline-block";$("authMessage").textContent=user?"Вы вошли как "+user.email+". Профиль синхронизирован с сервером.":"Гостевой режим: регистрация необязательна.";$("addFriendBtn").disabled=!user;if(user){loadFriends();loadFriendRequests();refreshNotifications();connect(false);loadAdminReports()}else{$("adminReportsCard")?.classList.add("hidden");$("friendsList").textContent="Войдите в аккаунт, чтобы пользоваться друзьями.";$("friendRequests").textContent="Войдите в аккаунт, чтобы пользоваться друзьями.";$("requestCount").textContent="0";$("chatPartnerPresence").textContent="Статус не определён"}}
+function showAuth(user){window.anonchatUserId=user?.id||"";$("authFormFields").classList.toggle("hidden",!!user);$("authState").textContent=user?"Аккаунт":"Гость";$("logoutBtn").style.display=user?"inline-block":"none";$("registerBtn").style.display=user?"none":"inline-block";$("loginBtn").style.display=user?"none":"inline-block";$("authMessage").textContent=user?"Вы вошли как "+user.email+". Профиль синхронизирован с сервером.":"Гостевой режим: регистрация необязательна.";$("addFriendBtn").disabled=!user;if(user){loadFriends();loadFriendRequests();refreshNotifications();connect(false);loadAdminReports()}else{$("adminReportsCard")?.classList.add("hidden");$("friendsList").textContent="Войдите в аккаунт, чтобы пользоваться друзьями.";$("friendRequests").textContent="Войдите в аккаунт, чтобы пользоваться друзьями.";$("requestCount").textContent="0";$("chatPartnerPresence").textContent="Статус не определён"}}
 let pendingVerificationEmail="";
 async function doAuth(mode){try{const d=await authRequest(mode,"POST",{email:$("authEmail").value,password:$("authPassword").value,nickname:profileData().nickname});if(mode==="register"&&d.verificationRequired){pendingVerificationEmail=d.email;$("emailVerificationBox").classList.remove("hidden");$("verificationMessage").textContent=d.message||"Проверьте почту.";$("emailVerificationCode").value="";$("authMessage").textContent="Регистрация почти завершена. Подтвердите email.";return}authToken=d.token;localStorage.setItem("anonchat_token",authToken);if(socket){socket.disconnect();socket=null}showAuth(d.user);fillProfile(d.user);loadSessions();$("emailVerificationBox").classList.add("hidden");$("authMessage").textContent="Успешно! Аккаунт подключён."}catch(e){$("authMessage").textContent=e.message}}
 $("verifyEmailBtn").onclick=async()=>{const email=pendingVerificationEmail||$("authEmail").value.trim();try{const d=await authRequest("verify-email","POST",{email,code:$("emailVerificationCode").value});$("verificationMessage").textContent=d.message||"Email подтверждён.";pendingVerificationEmail="";$("authEmail").value=email;$("authPassword").focus();$("authMessage").textContent="Email подтверждён. Теперь войдите в аккаунт."}catch(e){$("verificationMessage").textContent=e.message}};
