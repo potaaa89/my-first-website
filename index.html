@@ -1047,4 +1047,43 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  }
 }
 </style>
+<style id="anonchat-message-action-contrast">
+/* Clear, high-contrast controls inside chat bubbles */
+.messageitem .message-actions .message-action{
+ color:#315fc9!important;
+ background:#e5efff!important;
+ border:1px solid #b9d0ff!important;
+ border-radius:8px!important;
+ padding:7px 11px!important;
+ font-size:12px!important;
+ line-height:1.35!important;
+ font-weight:750!important;
+ text-decoration:none!important;
+ opacity:1!important;
+ box-shadow:0 1px 2px rgba(24,48,90,.08)!important;
+}
+.messageitem .message-actions .message-action:hover{background:#d5e5ff!important;color:#214ba8!important}
+.messageitem .message-actions .message-action:last-child{
+ color:#b42336!important;
+ background:#fff0f1!important;
+ border-color:#ffc5cb!important;
+}
+.messageitem .message-actions .message-action:last-child:hover{background:#ffe0e3!important;color:#941b2a!important}
+.messageitem .bubble.me .message-actions .message-action{
+ color:#fff!important;
+ background:#2878d8!important;
+ border:1px solid #1f68c0!important;
+}
+.messageitem .bubble.me .message-actions .message-action:hover{background:#1e63b5!important}
+.messageitem .bubble.me .message-actions .message-action:last-child{
+ color:#fff!important;
+ background:#d94355!important;
+ border-color:#c93346!important;
+}
+.messageitem .bubble.me .message-actions .message-action:last-child:hover{background:#b92e40!important}
+@media(max-width:760px){
+ .messageitem .message-actions{gap:7px!important;flex-wrap:wrap!important}
+ .messageitem .message-actions .message-action{min-height:38px!important;padding:8px 12px!important;font-size:12px!important}
+}
+</style>
 </body></html>
