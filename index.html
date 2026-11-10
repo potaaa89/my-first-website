@@ -929,4 +929,67 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&stage.classList.contains("stage-fullscreen-fallback"))fallbackOff()});
 })();
 </script>
+
+<style id="anonchat-mobile-telegram-light">
+/* Telegram-inspired light mobile UI only. Desktop styles and behavior are untouched. */
+@media screen and (max-width:760px){
+ :root{color-scheme:light;--bg:#eef2f6;--paper:#fff;--line:#e4eaf1;--ink:#17212b;--muted:#708090;--blue:#3390ec;--blue2:#2481d7;--soft:#eaf3fc;--green:#31b77a;--red:#e45d68}
+ html,body{background:#eef2f6!important;color:#17212b!important}
+ body{background:#eef2f6!important;padding-bottom:calc(72px + env(safe-area-inset-bottom))!important}
+ .app{min-height:100dvh;background:#eef2f6}
+ .topbar{height:56px!important;padding:0 14px!important;background:#fff!important;border-bottom:1px solid #e4eaf1!important;box-shadow:0 1px 4px #17212b0a!important;backdrop-filter:none!important}
+ .brand{font-size:18px!important;color:#17212b!important;gap:9px}
+ .mark{width:32px;height:32px;border-radius:10px;background:linear-gradient(145deg,#56a8f5,#2787d8)!important;box-shadow:none!important}
+ .topright{gap:9px}
+ .online{color:#708090!important;font-size:11px}
+ .dot{box-shadow:none!important}
+ .avatar{background:#e8f2fc!important;color:#2787d8!important;box-shadow:none!important}
+ .workspace{padding:10px 10px 16px!important;gap:10px!important;background:transparent}
+ .card{background:#fff!important;border:1px solid #e4eaf1!important;border-radius:16px!important;box-shadow:0 1px 3px #17212b0a!important}
+ .cardhead,.chathead,.videotop{background:#fff!important;border-color:#e8edf2!important;color:#17212b!important}
+ .cardhead{padding:14px 15px!important;font-size:14px}
+ .pad{padding:14px!important}
+ .profilebox{background:#fff!important;border-color:#e8edf2!important;padding:13px!important}
+ .profilepic,.chatavatar{background:#e8f2fc!important;color:#2787d8!important;box-shadow:none!important}
+ .profilemeta b,.sectiontitle,.videotitle,.chathead strong{color:#17212b!important}
+ .profilemeta span,.muted,.small,.fieldlabel,.authmessage,.statusline,.messagename,.voice-meta,.voice-label{color:#708090!important}
+ .tag{background:#eaf3fc!important;border:1px solid #dcecfb!important;color:#2787d8!important}
+ .input{background:#fff!important;color:#17212b!important;border:1px solid #dce3eb!important;border-radius:11px!important;box-shadow:none!important}
+ .input::placeholder{color:#9aa8b5!important}
+ .input:focus{border-color:#65a9e8!important;box-shadow:0 0 0 3px #3390ec18!important}
+ .btn{border-radius:11px!important;box-shadow:none!important}
+ .primary,.maincontrols .primary{background:#3390ec!important;color:#fff!important}
+ .secondary,.outline{background:#f1f4f7!important;color:#34495a!important;border-color:#e2e8ef!important}
+ .danger{background:#fff0f1!important;color:#d94d5c!important}
+ .divider{background:#e8edf2!important}
+ .videotop{padding:13px 14px!important}
+ .videostage{background:#17212b!important;border-radius:13px!important;box-shadow:none!important}
+ .video-card{background:#fff!important}
+ .stagebottom{padding:0 12px 13px!important}
+ .notice{background:#fff8e8!important;border-color:#f1dfb4!important;color:#8a6a28!important}
+ .chat-card{background:#fff!important;border-radius:16px!important;box-shadow:0 1px 3px #17212b0a!important}
+ .chathead{padding:12px 13px!important}
+ .chatstatus{background:#f5f7f9!important;color:#708090!important;border-color:#e8edf2!important}
+ .messages{background:#fff!important}
+ .bubble{background:#f1f3f5!important;color:#17212b!important;border-radius:14px 14px 14px 4px!important}
+ .bubble.me{background:#d9fdd3!important;color:#17212b!important;border-radius:14px 14px 4px 14px!important}
+ .sendrow,.sendtools{background:#fff!important;border-color:#e8edf2!important}
+ .attachbtn{background:#f1f4f7!important;color:#607384!important}
+ .chatfoot{color:#8b98a5!important;border-color:#edf0f3!important}
+ .historypanel{background:#f7f9fb!important;border-color:#e8edf2!important}
+ .historyitem{background:#fff!important;color:#17212b!important;border:1px solid #edf0f3!important}
+ .historyitem:hover{background:#f3f8fc!important}
+ .historytoggle{background:#f1f4f7!important;border-color:#e2e8ef!important;color:#526575!important}
+ .mobile-tabs{background:rgba(255,255,255,.97)!important;border-top:1px solid #e3e9ef!important;box-shadow:0 -3px 14px #17212b0b!important;backdrop-filter:blur(12px)!important;padding-top:6px!important}
+ .mobile-tab{color:#8493a0!important;border-radius:12px!important;min-height:49px!important;font-size:10px!important}
+ .mobile-tab-icon{font-size:19px!important}
+ .mobile-tab.active{background:#eaf3fc!important;color:#2488dc!important}
+ .notificationPanel{background:#fff!important;color:#17212b!important;border:1px solid #e4eaf1!important;box-shadow:0 8px 24px #17212b20!important}
+ .notificationHead,.notificationFoot{border-color:#e8edf2!important}
+ .notificationFoot #soundToggle{background:#eaf3fc!important;color:#2787d8!important}
+ .emoji-picker{background:#fff!important;border-color:#e4eaf1!important;box-shadow:0 8px 24px #17212b20!important}
+ .friend-row,.discovery-user{background:#fff!important;border-color:#e8edf2!important}
+}
+</style>
+
 </body></html>
