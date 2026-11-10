@@ -263,7 +263,52 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
   padding:9px 8px!important;font-size:12px!important;
   white-space:nowrap!important;
  }
-}</style>
+}
+/* Desktop directory cards: readable profile details with actions below */
+@media (min-width: 761px){
+ #discoveryUsers .discovery-user{
+  display:grid!important;
+  grid-template-columns:46px minmax(0,1fr)!important;
+  grid-template-rows:auto auto!important;
+  align-items:center!important;
+  gap:9px 12px!important;
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  padding:12px!important;
+ }
+ #discoveryUsers .discovery-avatar{
+  grid-column:1!important;grid-row:1!important;
+  width:46px!important;height:46px!important;
+  min-width:46px!important;
+ }
+ #discoveryUsers .discovery-user-info{
+  grid-column:2!important;grid-row:1!important;
+  display:block!important;width:100%!important;
+  min-width:0!important;max-width:none!important;
+ }
+ #discoveryUsers .discovery-user-info b{
+  display:block!important;width:100%!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+  line-height:1.4!important;
+ }
+ #discoveryUsers .discovery-user-info small{
+  display:block!important;width:100%!important;
+  white-space:normal!important;overflow-wrap:break-word!important;
+  line-height:1.45!important;margin-top:3px;
+ }
+ #discoveryUsers .discovery-actions{
+  grid-column:1/-1!important;grid-row:2!important;
+  display:flex!important;justify-content:flex-end!important;
+  flex-wrap:wrap!important;gap:8px!important;width:100%!important;
+  min-width:0!important;
+ }
+ #discoveryUsers .discovery-actions button{
+  flex:0 0 auto!important;min-width:105px!important;
+  padding:9px 13px!important;font-size:13px!important;
+ }
+}
+</style>
 </head>
 <body>
 <div class="app">
