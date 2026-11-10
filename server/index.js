@@ -173,6 +173,18 @@ io.on("connection",socket=>{
     if(caller.rowCount)callerProfile={id:Number(caller.rows[0].id),nickname:caller.rows[0].nickname||"Пользователь",avatar:caller.rows[0].avatar_data||""};
    }catch(e){console.error("Direct call lookup failed",e);return socket.emit("call_unavailable",{message:"Не удалось проверить доступность звонка."})}
   }
+  if(!hasDirectTarget){
+   const peerSocket=p&&io.sockets.sockets.get(p);
+   const callerId=Number(socket.data.user?.id),peerId=Number(peerSocket?.data.user?.id);
+   if(!Number.isSafeInteger(callerId)||callerId<1||!Number.isSafeInteger(peerId)||peerId<1)return socket.emit("call_unavailable",{message:"Звонки доступны после обмена сообщениями между авторизованными пользователями."});
+   const key=conversationOf.get(socket.id);
+   if(!key)return socket.emit("call_unavailable",{message:"Сначала начните переписку и обменяйтесь минимум тремя сообщениями каждый."});
+   try{
+    const counts=await pool.query("SELECT COUNT(*) FILTER (WHERE sender_id=$1)::int AS mine,COUNT(*) FILTER (WHERE sender_id=$2)::int AS theirs FROM chat_messages WHERE conversation_key=$3 AND sender_id IN ($1,$2) AND recipient_id IN ($1,$2)",[callerId,peerId,key]);
+    const mine=Number(counts.rows[0]?.mine||0),theirs=Number(counts.rows[0]?.theirs||0);
+    if(mine<3||theirs<3)return socket.emit("call_unavailable",{message:"Звонки откроются после 3 сообщений от каждого. Сейчас: вы — "+mine+"/3, собеседник — "+theirs+"/3."});
+   }catch(e){console.error("Random chat call gate failed",e);return socket.emit("call_unavailable",{message:"Не удалось проверить количество сообщений. Попробуйте позже."})}
+  }
   if(!p||!io.sockets.sockets.has(p))return socket.emit("call_unavailable",{message:"Собеседник сейчас недоступен."});
   if(callState.has(socket.id)||callState.has(p))return socket.emit("call_busy",{message:"Вы или собеседник уже участвуете в другом звонке."});
   const m=mode==="audio"?"audio":"video";
