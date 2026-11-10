@@ -1175,7 +1175,7 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  let seen=false;try{seen=localStorage.getItem(seenKey)==="1"}catch(e){}
  if(!seen&&!localStorage.getItem("anonchat_token"))screen.classList.remove("hidden");
  document.getElementById("welcomeGuest").addEventListener("click",close);
- document.getElementById("welcomeRegister").addEventListener("click",()=>{close();document.getElementById("accountCard")?.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>document.getElementById("registerBtn")?.click(),350)});
+ document.getElementById("welcomeRegister").addEventListener("click",()=>{close();document.getElementById("accountCard")?.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>document.getElementById("authEmail")?.focus(),350)});
  document.getElementById("welcomeLogin").addEventListener("click",()=>{close();document.getElementById("accountCard")?.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>document.getElementById("loginBtn")?.focus(),350)});
 })();
 </script>
