@@ -804,4 +804,81 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  html body .workspace>.leftcol>#friendsCard{grid-column:3!important;grid-row:2!important}
 }
 </style>
+
+<style>
+/* DESKTOP ONLY: fixed side rails with independently scrolling center chat */
+@media screen and (min-width:1181px){
+ html,body{height:100%;overflow:hidden}
+ .app{height:100dvh;min-height:0;grid-template-rows:68px minmax(0,1fr);overflow:hidden}
+ html body .workspace{
+  height:calc(100dvh - 68px)!important;min-height:0!important;
+  max-height:calc(100dvh - 68px)!important;overflow:hidden!important;
+  display:grid!important;width:100%!important;max-width:none!important;
+  margin:0!important;padding:16px clamp(18px,2vw,34px)!important;
+  box-sizing:border-box!important;
+  grid-template-columns:minmax(250px,22fr) minmax(420px,56fr) minmax(270px,22fr)!important;
+  gap:clamp(12px,1.2vw,22px)!important;align-items:stretch!important;
+ }
+ html body .workspace>.leftcol,
+ html body .workspace>.rightcol{
+  display:flex!important;flex-direction:column!important;
+  align-self:stretch!important;min-width:0!important;min-height:0!important;
+  height:100%!important;max-height:100%!important;
+  overflow-y:auto!important;overflow-x:hidden!important;
+  overscroll-behavior:contain!important;scrollbar-width:thin!important;
+  position:relative!important;top:auto!important;
+ }
+ html body .workspace>.leftcol{grid-column:1!important;grid-row:1!important}
+ html body .workspace>.centercol{
+  grid-column:2!important;grid-row:1!important;
+  display:flex!important;flex-direction:column!important;
+  min-width:0!important;min-height:0!important;width:100%!important;height:100%!important;
+  max-height:100%!important;overflow-y:auto!important;overflow-x:hidden!important;
+  overscroll-behavior:contain!important;scrollbar-width:thin!important;gap:16px!important;
+ }
+ html body .workspace>.rightcol{grid-column:3!important;grid-row:1!important}
+ html body .workspace>.leftcol>.card,
+ html body .workspace>.rightcol>.card{
+  width:100%!important;min-width:0!important;max-width:none!important;
+  flex:0 0 auto!important;margin:0 0 14px!important;box-sizing:border-box!important;
+ }
+ html body .workspace .centercol>.card{width:100%!important;min-width:0!important;flex:0 0 auto!important}
+}
+</style>
+
+<script>
+/* Keep the original DOM arrangement on mobile; split side rails only on desktop. */
+(function(){
+ const mq=window.matchMedia("(min-width: 1181px)");
+ const workspace=document.querySelector(".workspace");
+ const left=workspace&&workspace.querySelector(":scope > .leftcol");
+ const center=workspace&&workspace.querySelector(":scope > .centercol");
+ if(!workspace||!left||!center)return;
+ const friends=document.getElementById("friendsCard");
+ const admin=document.getElementById("adminReportsCard");
+ if(!friends||!admin)return;
+ let right=null;
+ function applyDesktop(){
+  if(!mq.matches){
+   if(right){
+    left.insertBefore(friends,document.getElementById("filtersCard"));
+    left.insertBefore(admin,document.getElementById("filtersCard"));
+    right.remove();right=null;
+   }
+   return;
+  }
+  if(!right){
+   right=document.createElement("aside");
+   right.className="column rightcol";
+   right.id="desktopRightRail";
+   right.setAttribute("aria-label","Друзья и панель администратора");
+   workspace.insertBefore(right,center.nextSibling);
+  }
+  right.append(admin,friends);
+ }
+ applyDesktop();
+ if(mq.addEventListener)mq.addEventListener("change",applyDesktop);
+ else mq.addListener(applyDesktop);
+})();
+</script>
 </body></html>
