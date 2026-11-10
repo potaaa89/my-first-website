@@ -191,7 +191,7 @@ html,body{background:radial-gradient(ellipse at 8% 0%,#e4ddff 0,transparent 36%)
  </section>
  <section class="card hidden" id="adminReportsCard" style="margin-top:12px">
   <div class="cardhead"><span>Панель администратора · Жалобы</span><button class="historytoggle" id="adminReportsRefresh" type="button">Обновить</button></div>
-  <div class="pad"><div class="sectiontitle">Жалобы пользователей</div><div id="adminReportsList" class="small muted">Загрузка жалоб…</div><div class="divider"></div><div class="sectiontitle">Заблокированные аккаунты</div><div id="adminBansList" class="small muted">Загрузка списка…</div></div>
+  <div class="pad"><div class="sectiontitle">Жалобы пользователей</div><div id="adminReportsList" class="small muted">Загрузка жалоб…</div><div class="divider"></div><div class="sectiontitle">Заблокированные аккаунты</div><div id="adminBansList" class="small muted">Загрузка списка…</div><div class="divider"></div><div class="sectiontitle">Автоматические временные блокировки за спам</div><div id="adminSpamList" class="small muted">Загрузка списка…</div></div>
  </section>
  <section class="card" id="filtersCard" style="margin-top:12px">
   <div class="cardhead"><span>Поиск собеседника</span><span class="tag">Фильтры</span></div>
@@ -248,10 +248,10 @@ function searchData(){return {gender:$("filterGender").value,country:$("filterCo
 let authToken=localStorage.getItem("anonchat_token")||"";window.anonchatUserId="";
 async function authRequest(path,method,body){const r=await fetch(SERVER_URL+"/api/"+path,{method,headers:{"Content-Type":"application/json",...(authToken?{Authorization:"Bearer "+authToken}:{})},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({error:"Ошибка сервера"}));if(!r.ok)throw new Error(d.error||"Ошибка");return d}
 async function loadAdminReports(){
- const card=$("adminReportsCard"),box=$("adminReportsList"),bans=$("adminBansList");if(!authToken)return;
+ const card=$("adminReportsCard"),box=$("adminReportsList"),bans=$("adminBansList"),spams=$("adminSpamList");if(!authToken)return;
  try{
-  const [rd,bd]=await Promise.all([authRequest("admin/reports","GET"),authRequest("admin/bans","GET")]);
-  card.classList.remove("hidden");box.innerHTML="";bans.innerHTML="";
+  const [rd,bd,sd]=await Promise.all([authRequest("admin/reports","GET"),authRequest("admin/bans","GET"),authRequest("admin/spam-blocks","GET")]);
+  card.classList.remove("hidden");box.innerHTML="";bans.innerHTML="";spams.innerHTML="";
   if(!rd.reports?.length)box.textContent="Жалоб пока нет.";
   for(const r of rd.reports){
    const item=document.createElement("div");item.className="historyitem";item.style.cssText="display:block;margin:8px 0;padding:12px";
@@ -264,6 +264,8 @@ async function loadAdminReports(){
   }
   if(!bd.users?.length)bans.textContent="Заблокированных аккаунтов нет.";
   for(const u of bd.users){const item=document.createElement("div");item.className="historyitem";item.style.cssText="display:flex;flex-wrap:wrap;justify-content:space-between;margin:7px 0;padding:10px";const info=document.createElement("span");info.style.cssText="min-width:0;overflow-wrap:anywhere";info.textContent=(u.nickname||"Пользователь")+" · "+u.email+" · "+(u.ban_reason||"Без указания причины");const btn=document.createElement("button");btn.type="button";btn.className="historytoggle";btn.textContent="Разблокировать";btn.onclick=async()=>{if(!confirm("Разблокировать аккаунт "+u.email+"?"))return;btn.disabled=true;try{await authRequest("admin/users/"+u.id+"/ban","DELETE");await loadAdminReports();status("Аккаунт разблокирован.")}catch(e){btn.disabled=false;status(e.message)}};item.append(info,btn);bans.append(item)}
+  if(!sd.users?.length)spams.textContent="Автоматических блокировок сейчас нет.";
+  for(const u of sd.users){const item=document.createElement("div");item.className="historyitem";item.style.cssText="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin:7px 0;padding:10px";const info=document.createElement("span");info.style.cssText="min-width:0;overflow-wrap:anywhere";info.textContent=(u.nickname||"Пользователь")+" · "+u.email+" · "+(u.spam_block_reason||"Подозрительная активность")+" · до "+new Date(u.spam_blocked_until).toLocaleString("ru-RU");const btn=document.createElement("button");btn.type="button";btn.className="historytoggle";btn.textContent="Снять блокировку";btn.onclick=async()=>{if(!confirm("Снять временную блокировку с "+u.email+"?"))return;btn.disabled=true;try{await authRequest("admin/users/"+u.id+"/unspam","POST",{});await loadAdminReports();status("Временная блокировка снята.")}catch(e){btn.disabled=false;status(e.message)}};item.append(info,btn);spams.append(item)}
  }catch(e){if(e.message.includes("панели администратора"))card.classList.add("hidden");else{box.textContent=e.message;bans.textContent=e.message}}
 }
 
