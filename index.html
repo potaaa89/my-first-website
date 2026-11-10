@@ -737,4 +737,43 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  html body .workspace .videostage .videoCard video{width:100%!important;height:100%!important;object-fit:cover!important}
 }
 </style>
+
+<style>
+/* FINAL DESKTOP WIDTH FIX: use the full viewport, even at reduced browser zoom */
+@media screen and (min-width:1181px){
+ html,body,.app{width:100%!important;max-width:none!important;margin:0!important}
+ html body .workspace{
+  display:grid!important;
+  width:100%!important;max-width:none!important;
+  margin:0!important;
+  padding:20px clamp(18px,2vw,34px)!important;
+  box-sizing:border-box!important;
+  grid-template-columns:minmax(250px,22fr) minmax(420px,56fr) minmax(270px,22fr)!important;
+  gap:clamp(12px,1.2vw,22px)!important;
+  align-items:start!important;
+ }
+ html body .workspace>.leftcol{display:contents!important}
+ html body .workspace>.centercol{
+  display:flex!important;flex-direction:column!important;
+  grid-column:2!important;grid-row:1!important;
+  width:100%!important;min-width:0!important;max-width:none!important;gap:16px!important;
+ }
+ html body .workspace>.leftcol>#accountCard{grid-column:1!important;grid-row:1!important}
+ html body .workspace>.leftcol>#profileCard{grid-column:1!important;grid-row:2!important}
+ html body .workspace>.leftcol>#filtersCard{grid-column:1!important;grid-row:3!important}
+ html body .workspace>.leftcol>#publicProfileCard{grid-column:1!important;grid-row:4!important}
+ html body .workspace>.leftcol>#friendsCard{grid-column:3!important;grid-row:1!important}
+ html body .workspace>.leftcol>#adminReportsCard{grid-column:3!important;grid-row:2!important}
+ html body .workspace>.leftcol>#accountCard,
+ html body .workspace>.leftcol>#profileCard,
+ html body .workspace>.leftcol>#filtersCard,
+ html body .workspace>.leftcol>#publicProfileCard,
+ html body .workspace>.leftcol>#friendsCard,
+ html body .workspace>.leftcol>#adminReportsCard{
+  width:100%!important;min-width:0!important;max-width:none!important;
+  margin:0 0 14px!important;box-sizing:border-box!important;
+ }
+ html body .workspace .centercol>.card{width:100%!important;min-width:0!important}
+}
+</style>
 </body></html>
