@@ -434,8 +434,36 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
 }
 @media (min-width:761px) and (max-width:1180px){.workspace{grid-template-columns:minmax(250px,290px) minmax(0,1fr)!important;gap:14px!important}.workspace>.rightcol{grid-column:2!important}}
 </style>
+<style id="anonchat-welcome-style">
+.welcome-screen{position:fixed;inset:0;z-index:10040;display:grid;place-items:center;padding:22px;background:linear-gradient(135deg,rgba(20,35,68,.78),rgba(48,73,125,.68));backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+.welcome-card{width:min(100%,560px);padding:48px 44px 34px;border:1px solid #ffffffb8;border-radius:28px;background:linear-gradient(155deg,#fff 0%,#f4f7ff 100%);box-shadow:0 28px 90px #101d3c55;text-align:center}
+.welcome-logo{display:flex;justify-content:center;align-items:center;gap:10px;font-size:22px;font-weight:850;letter-spacing:-.5px;margin-bottom:34px}
+.welcome-kicker{font-size:10px;font-weight:850;letter-spacing:2px;color:#6483c6}
+.welcome-card h1{font-size:clamp(28px,5vw,40px);line-height:1.12;letter-spacing:-1.2px;margin:14px 0;color:#202b43}
+.welcome-description{max-width:410px;margin:0 auto;color:#77839a;font-size:15px;line-height:1.65}
+.welcome-actions{display:grid;gap:10px;margin:28px auto 17px;max-width:340px}
+.welcome-actions .btn{min-height:48px;font-size:14px}
+.welcome-login{border:0;background:transparent;color:#748099;padding:9px;cursor:pointer;font-size:13px}
+.welcome-login b{color:#416fda}
+.welcome-note{margin-top:20px;color:#9aa4b6;font-size:11px}
+@media(max-width:760px){.welcome-screen{padding:15px}.welcome-card{padding:36px 22px 27px;border-radius:23px}.welcome-logo{margin-bottom:27px}.welcome-card h1{font-size:30px}.welcome-description{font-size:14px}}
+</style>
 </head>
 <body>
+<div id="welcomeScreen" class="welcome-screen hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+ <div class="welcome-card">
+  <div class="welcome-logo"><span class="mark">✦</span> AnonChat</div>
+  <div class="welcome-kicker">ОБЩАЙСЯ · ЗНАКОМЬСЯ · БУДЬ СОБОЙ</div>
+  <h1 id="welcomeTitle">Новые знакомства начинаются здесь</h1>
+  <p class="welcome-description">Общайся с людьми со всего мира в видеочате и личных сообщениях. Выбирай, как тебе удобнее начать.</p>
+  <div class="welcome-actions">
+   <button type="button" class="btn primary" id="welcomeRegister">Создать аккаунт</button>
+   <button type="button" class="btn secondary" id="welcomeGuest">Продолжить как гость</button>
+  </div>
+  <button type="button" class="welcome-login" id="welcomeLogin">Уже есть аккаунт? <b>Войти</b></button>
+  <div class="welcome-note">Регистрация необязательна — можно начать общение без аккаунта.</div>
+ </div>
+</div>
 <div class="app">
 <header class="topbar">
  <div class="brand"><span class="mark">✦</span><span>AnonChat</span></div>
@@ -1138,4 +1166,17 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  const timer=setInterval(()=>{if(!document.getElementById("videostage")){clearInterval(timer);observer.disconnect();return}refresh()},500);
  refresh();
 })();
-</script></body></html>
+</script><script id="anonchat-welcome-init">
+(function(){
+ const screen=document.getElementById("welcomeScreen");
+ if(!screen)return;
+ const seenKey="anonchat_welcome_seen_v1";
+ function close(){screen.classList.add("hidden");try{localStorage.setItem(seenKey,"1")}catch(e){}}
+ let seen=false;try{seen=localStorage.getItem(seenKey)==="1"}catch(e){}
+ if(!seen&&!localStorage.getItem("anonchat_token"))screen.classList.remove("hidden");
+ document.getElementById("welcomeGuest").addEventListener("click",close);
+ document.getElementById("welcomeRegister").addEventListener("click",()=>{close();document.getElementById("accountCard")?.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>document.getElementById("registerBtn")?.click(),350)});
+ document.getElementById("welcomeLogin").addEventListener("click",()=>{close();document.getElementById("accountCard")?.scrollIntoView({behavior:"smooth",block:"start"});setTimeout(()=>document.getElementById("loginBtn")?.focus(),350)});
+})();
+</script>
+</body></html>
