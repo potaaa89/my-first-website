@@ -704,4 +704,37 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
  input.addEventListener("keydown",event=>{if(event.key==="Escape")picker.classList.add("hidden")});
 })();
 
-</script></body></html>
+</script>
+<style>
+/* FINAL DESKTOP OVERRIDE: approved three-column reference layout */
+@media screen and (min-width:1181px){
+ html body .workspace{
+  display:grid!important;grid-template-columns:minmax(300px,350px) minmax(560px,1fr) minmax(310px,370px)!important;
+  width:100%!important;max-width:1720px!important;margin:0 auto!important;padding:20px 22px!important;
+  gap:18px!important;align-items:start!important;box-sizing:border-box!important;
+ }
+ html body .workspace>.leftcol{display:contents!important}
+ html body .workspace>.centercol{grid-column:2!important;grid-row:1!important;display:flex!important;flex-direction:column!important;gap:16px!important;min-width:0!important;width:100%!important}
+ html body .workspace>.leftcol>#accountCard{grid-column:1!important;grid-row:1!important}
+ html body .workspace>.leftcol>#profileCard{grid-column:1!important;grid-row:2!important}
+ html body .workspace>.leftcol>#filtersCard{grid-column:1!important;grid-row:3!important}
+ html body .workspace>.leftcol>#publicProfileCard{grid-column:1!important;grid-row:4!important}
+ html body .workspace>.leftcol>#friendsCard{grid-column:3!important;grid-row:1!important}
+ html body .workspace>.leftcol>#adminReportsCard{grid-column:3!important;grid-row:2!important}
+ html body .workspace>.leftcol>#accountCard,
+ html body .workspace>.leftcol>#profileCard,
+ html body .workspace>.leftcol>#filtersCard,
+ html body .workspace>.leftcol>#publicProfileCard,
+ html body .workspace>.leftcol>#friendsCard,
+ html body .workspace>.leftcol>#adminReportsCard{
+  width:100%!important;min-width:0!important;max-width:none!important;margin:0 0 14px!important;box-sizing:border-box!important
+ }
+ html body .workspace .centercol>.card{width:100%!important;min-width:0!important}
+ html body .workspace .videostage{display:flex!important;position:relative!important;gap:8px!important;height:clamp(280px,34vw,430px)!important;min-height:280px!important;max-height:430px!important;margin:14px 12px!important;background:transparent!important;overflow:hidden!important}
+ html body .workspace .videostage .videoCard,
+ html body .workspace .videostage .videoCard:first-child,
+ html body .workspace .videostage .videoCard:nth-child(2){display:block!important;position:relative!important;inset:auto!important;z-index:1!important;flex:1 1 50%!important;width:50%!important;height:100%!important;min-width:0!important;aspect-ratio:auto!important;border:0!important;border-radius:14px!important;box-shadow:none!important}
+ html body .workspace .videostage .videoCard video{width:100%!important;height:100%!important;object-fit:cover!important}
+}
+</style>
+</body></html>
