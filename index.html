@@ -522,6 +522,38 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
 .chatavatar.gender-female,.profilepic.gender-female{background:var(--gender-female-bg)!important;color:var(--gender-female-fg)!important;border:2px solid #f18aad!important;box-shadow:0 0 0 3px #f18aad30}
 .gender-choice[data-gender="male"].active,.gender-choice[data-register-gender="male"].active{background:#d7eaff!important;color:#1554a5!important;outline:2px solid #75aaf4!important}
 .gender-choice[data-gender="female"].active,.gender-choice[data-register-gender="female"].active{background:#ffe0eb!important;color:#a92759!important;outline:2px solid #f18aad!important}
+</style><style id="anonchat-mobile-video-layout-v2">
+@media screen and (max-width:760px){
+ /* Make the self-view portrait and easier to position/read */
+ #videostage:not(:fullscreen):not(.stage-fullscreen-fallback)>.videoCard:first-child{
+  width:clamp(118px,32vw,158px)!important;
+  max-width:40vw!important;
+  aspect-ratio:3/4!important;
+ }
+ /* Give the main video a taller portrait-friendly viewing area */
+ #videostage:not(:fullscreen):not(.stage-fullscreen-fallback){
+  height:min(78vh,760px)!important;
+  min-height:480px!important;
+  max-height:760px!important;
+ }
+ #videostage:not(:fullscreen):not(.stage-fullscreen-fallback)>.videoCard:nth-child(2) video{
+  object-fit:contain!important;
+  background:#101827!important;
+ }
+ #videostage:fullscreen,
+ #videostage.stage-fullscreen-fallback{
+  width:100vw!important;height:100dvh!important;max-height:none!important;min-height:0!important;
+  margin:0!important;border-radius:0!important;background:#101827!important;
+ }
+ #videostage:fullscreen>.videoCard:nth-child(2) video,
+ #videostage.stage-fullscreen-fallback>.videoCard:nth-child(2) video{
+  width:100%!important;height:100%!important;object-fit:contain!important;background:#101827!important;
+ }
+ #videostage:fullscreen>.videoCard:first-child,
+ #videostage.stage-fullscreen-fallback>.videoCard:first-child{
+  width:clamp(126px,34vw,170px)!important;aspect-ratio:3/4!important;height:auto!important;
+ }
+}
 </style></head>
 <body>
 <div id="welcomeScreen" class="welcome-screen hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
