@@ -594,6 +594,39 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
  .live-session-layout{grid-template-columns:minmax(0,1fr);gap:12px}
  .live-session-layout>.standalone-chat{min-height:440px;height: min(62vh,620px)}
 }
+</style><style id="anonchat-expand-video-when-chat-hidden">
+/* The video uses the whole center column until a conversation opens */
+.live-session-layout{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr)!important;
+ gap:14px!important;
+ align-items:stretch;
+ transition:grid-template-columns .38s ease;
+}
+.live-session-layout>.video-card{
+ width:100%!important;min-width:0;
+ transition:width .38s ease,transform .38s ease;
+}
+.live-session-layout>.standalone-chat:not(.hidden){
+ display:flex!important;
+}
+.live-session-layout:has(>.standalone-chat:not(.hidden)){
+ grid-template-columns:minmax(0,1fr) minmax(320px,.92fr)!important;
+}
+.live-session-layout:has(>.standalone-chat:not(.hidden))>.video-card{
+ min-width:0;
+}
+.live-session-layout>.standalone-chat{
+ min-width:0;
+ opacity:1;
+ transition:opacity .25s ease;
+}
+@media(max-width:900px){
+ .live-session-layout,
+ .live-session-layout:has(>.standalone-chat:not(.hidden)){
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+}
 </style></head>
 <body>
 <div id="welcomeScreen" class="welcome-screen hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
