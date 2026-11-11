@@ -554,6 +554,33 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
   width:clamp(126px,34vw,170px)!important;aspect-ratio:3/4!important;height:auto!important;
  }
 }
+</style><style id="anonchat-mobile-video-polish-v3">
+@media screen and (max-width:760px){
+  /* Self-view: slightly wider landscape inset, still in the top-left */
+  #videostage:not(:fullscreen):not(.stage-fullscreen-fallback)>.videoCard:first-child{
+    inset:14px auto auto 14px!important;
+    width:clamp(180px,38vw,250px)!important;
+    max-width:48vw!important;
+    aspect-ratio:16/9!important;
+    height:auto!important;
+  }
+  #videostage:not(:fullscreen):not(.stage-fullscreen-fallback)>.videoCard:first-child video{
+    width:100%!important;height:100%!important;object-fit:cover!important;
+  }
+  /* Main video fills the tall mobile stage instead of leaving large dark bands */
+  #videostage:not(:fullscreen):not(.stage-fullscreen-fallback)>.videoCard:nth-child(2) video{
+    width:100%!important;height:100%!important;object-fit:cover!important;
+    object-position:center center!important;background:#101827!important;
+  }
+  #videostage:fullscreen>.videoCard:nth-child(2) video,
+  #videostage.stage-fullscreen-fallback>.videoCard:nth-child(2) video{
+    object-fit:cover!important;object-position:center center!important;
+  }
+  #videostage:fullscreen>.videoCard:first-child,
+  #videostage.stage-fullscreen-fallback>.videoCard:first-child{
+    width:clamp(180px,40vw,260px)!important;aspect-ratio:16/9!important;height:auto!important;
+  }
+}
 </style></head>
 <body>
 <div id="welcomeScreen" class="welcome-screen hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
