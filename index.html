@@ -1257,23 +1257,19 @@ window.addEventListener("beforeunload",()=>{socket?.disconnect();localStream?.ge
 </style>
 <style id="anonchat-mobile-self-preview-position">
 @media screen and (max-width:760px){
- #videostage:not(:fullscreen):not(.stage-fullscreen-fallback)>.videoCard:first-child{
-  position:absolute!important;
-  top:12px!important;
-  left:12px!important;
-  right:auto!important;
-  bottom:auto!important;
-  inset:12px auto auto 12px!important;
-  width:clamp(112px,30vw,170px)!important;
-  max-width:38vw!important;
-  height:auto!important;
-  aspect-ratio:16/10!important;
-  z-index:5!important;
-  border:2px solid #fff!important;
-  border-radius:12px!important;
-  overflow:hidden!important;
-  box-shadow:0 5px 22px #0005!important;
+ #videostage:not(:fullscreen):not(.stage-fullscreen-fallback){
+  height:min(78vh,760px)!important;min-height:480px!important;max-height:760px!important;
  }
+ #videostage:not(:fullscreen):not(.stage-fullscreen-fallback)>.videoCard:first-child{
+  position:absolute!important;top:12px!important;left:12px!important;right:auto!important;bottom:auto!important;
+  inset:12px auto auto 12px!important;width:clamp(118px,32vw,158px)!important;max-width:40vw!important;
+  height:auto!important;aspect-ratio:3/4!important;z-index:5!important;border:2px solid #fff!important;
+  border-radius:12px!important;overflow:hidden!important;box-shadow:0 5px 22px #0005!important;
+ }
+ #videostage:not(:fullscreen):not(.stage-fullscreen-fallback)>.videoCard:nth-child(2) video{object-fit:contain!important;background:#101827!important}
+ #videostage:fullscreen,#videostage.stage-fullscreen-fallback{width:100vw!important;height:100dvh!important;max-height:none!important;min-height:0!important;margin:0!important;border-radius:0!important;background:#101827!important}
+ #videostage:fullscreen>.videoCard:nth-child(2) video,#videostage.stage-fullscreen-fallback>.videoCard:nth-child(2) video{width:100%!important;height:100%!important;object-fit:contain!important;background:#101827!important}
+ #videostage:fullscreen>.videoCard:first-child,#videostage.stage-fullscreen-fallback>.videoCard:first-child{width:clamp(126px,34vw,170px)!important;aspect-ratio:3/4!important;height:auto!important}
 }
 </style>
 <style id="anonchat-message-action-contrast">
