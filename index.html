@@ -581,6 +581,19 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
     width:clamp(180px,40vw,260px)!important;aspect-ratio:16/9!important;height:auto!important;
   }
 }
+</style><style id="anonchat-live-side-by-side-chat">
+/* Keep live video and conversation visible together on desktop */
+.live-session-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.82fr);gap:14px;align-items:stretch;min-width:0}
+.live-session-layout>.video-card,.live-session-layout>.standalone-chat{min-width:0;width:100%;margin:0}
+.live-session-layout>.standalone-chat{height:100%;min-height:520px;display:flex;flex-direction:column}
+.live-session-layout>.standalone-chat.hidden{display:none!important}
+.live-session-layout>.standalone-chat .chatbox{flex:1;min-height:0;display:flex;flex-direction:column}
+.live-session-layout>.standalone-chat .messages{flex:1;min-height:220px;max-height:none;overflow-y:auto}
+.live-session-layout>.standalone-chat .sendtools{flex-shrink:0}
+@media(max-width:900px){
+ .live-session-layout{grid-template-columns:minmax(0,1fr);gap:12px}
+ .live-session-layout>.standalone-chat{min-height:440px;height: min(62vh,620px)}
+}
 </style></head>
 <body>
 <div id="welcomeScreen" class="welcome-screen hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
@@ -690,6 +703,7 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
  </section>
 </aside>
 <section class="column centercol">
+ <div class="live-session-layout">
  <section class="card video-card">
   <div class="videotop"><div><div class="videotitle">Случайный видеочат</div><div class="small muted">Новые знакомства по всему миру</div></div><span class="tag" id="connection">Не подключено</span></div>
   <div class="call-lobby" id="callLobby" aria-live="polite">
@@ -738,6 +752,7 @@ body{background:radial-gradient(ellipse at 8% 0%,#edf2ff 0,transparent 38%),radi
   </div>
   <div class="chatfoot">История сохраняется, если оба собеседника вошли в аккаунты. Не делись паролями и платёжными данными.</div>
  </section>
+ </div>
 </section>
 </main>
 
